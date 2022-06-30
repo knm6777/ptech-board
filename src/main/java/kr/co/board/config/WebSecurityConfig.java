@@ -35,7 +35,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .formLogin()
                     .loginPage("/member/login")
                     .permitAll()
-                    .successHandler(loginSuccessHandler)
                     .defaultSuccessUrl("/");
 //                    .failureUrl("/member/login?error=1");
 //                   .loginProcessingUrl("/home");
