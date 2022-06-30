@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<body lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/base}">
+<div layout:fragment="content" class="container my-3">
+    <div class="my-3 border-bottom">
+        <div>
+            <h4>로그인</h4>
+        </div>
+    </div>
+    <form th:action="@{/member/login}" th:object="${memberVo}" method="post">
+        <div th:replace="fragments/form_errors :: formErrorsFragment"></div>
+        <div class="mb-3">
+            <label for="email" class="form-label">이메일</label>
+            <input type="text" th:field="*{username}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">비밀번호</label>
+            <input type="password" th:field="*{password}" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">로그인</button>
+    </form>
+<!--    <a th:href="/app/users/new">회원가입</a>-->
+</div>
+</body>
+</html>
