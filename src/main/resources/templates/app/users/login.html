@@ -7,20 +7,21 @@
             <h4>로그인</h4>
         </div>
     </div>
-    <form th:action="@{/member/login}" th:object="${memberVo}" method="post">
-        <div th:replace="fragments/form_errors :: formErrorsFragment"></div>
-        <div class="mb-3">
-            <label for="email" class="form-label">이메일</label>
-            <input type="text" th:field="*{username}" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">비밀번호</label>
-            <input type="password" th:field="*{password}" class="form-control">
-        </div>
+    <main class="form-login">
+        <form th:action="@{/member/login}" th:object="${memberVo}" method="post">
+            <div th:replace="fragments/form_errors :: formErrorsFragment"></div>
+            <div class="mb-3">
+                <label for="email" class="form-label">이메일</label>
+                <input type="text" th:field="*{username}" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">비밀번호</label>
+                <input type="password" th:field="*{password}" class="form-control">
+            </div>
 
-        <button type="submit" class="btn btn-primary">로그인</button>
-    </form>
-<!--    <a th:href="/app/users/new">회원가입</a>-->
+            <button type="submit" class="btn btn-primary">로그인</button>
+        </form>
+    </main>
 </div>
 </body>
 </html>

@@ -7,6 +7,7 @@
             <h4>회원가입</h4>
         </div>
     </div>
+    <main class="form-new">
     <form th:action="@{/member/new}" th:object="${memberCreateForm}" method="post">
         <div th:replace="fragments/form_errors :: formErrorsFragment"></div>
         <div class="mb-3">
@@ -27,6 +28,7 @@
         </div>
         <button type="submit" class="btn btn-primary">회원가입</button>
     </form>
+    </main>
 </div>
 </body>
 </html>

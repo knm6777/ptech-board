@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final LoginSuccessHandler loginSuccessHandler;
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
@@ -27,7 +26,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .csrf()
                 .and()
                     .authorizeRequests()
-                    //.antMatchers("/home").authenticated()
                     .anyRequest()
                     .permitAll()
                 .and()
