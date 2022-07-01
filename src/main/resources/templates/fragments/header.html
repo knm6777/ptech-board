@@ -1,4 +1,4 @@
-<head th:fragment="header" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="header" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,11 +22,22 @@
                     <a class="nav-link" href="#">자유 게시판</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/member/login}">로그인</a>
+                    <a sec:authorize="isAnonymous()" th:href="@{'/member/login'}" type="button" class="btn btn-outline-light me-2">Login</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/member/new}">회원가입</a>
                 </li>
+                <div class="text-end mx-1">
+                    <!--                        <th:block sec:authorize="isAuthenticated()" th:with="currentUser=${#authentication.getPrincipal().getMember()}">-->
+                    <!--                            <span sec:authorize="hasRole('ROLE_ADMIN')">[관리자]</span>-->
+                    <!--                            <span class="text-white" th:text="${currentUser.username}"></span>님 환영합니다!-->
+                    <!--                        </th:block>-->
+                </div>
+                <a sec:authorize="isAnonymous()" th:href="@{'/member/login'}" type="button" class="btn btn-outline-light me-2">Login</a>
+                <form sec:authorize="isAuthenticated()" th:action="@{'/member/logout'}" method="post">
+                    <input type="submit" class="btn btn-outline-warning me-2" value="Logout">
+                </form>
+                <a sec:authorize="isAnonymous()" th:href="@{'/member/new'}" type="button" class="btn btn-warning">Sign-up</a>
             </ul>
             <form class="d-flex">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
