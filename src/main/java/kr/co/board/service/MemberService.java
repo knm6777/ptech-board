@@ -35,7 +35,6 @@ public class MemberService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Email: " + email + " not found"));
         System.out.println(email + " 로그인 !");
         return new MemberAdapter(member);
-
     }
 
     @PostConstruct
@@ -73,10 +72,11 @@ public class MemberService implements UserDetailsService {
                 .email(vo.getEmail())
                 .password(passwordEncoder.encode(vo.getPassword()))
                 .username(vo.getUsername()).build();
+        memberRepository.save(member);
         Role role = Role.builder()
                 .author(Author.MEMBER)
                 .member(member).build();
         member.getRoles().add(role);
-        memberRepository.save(member);
+        roleRepository.save(role);
     }
 }

@@ -1,6 +1,5 @@
 package kr.co.board.controller;
 
-import kr.co.board.model.MemberCreateForm;
 import kr.co.board.model.vo.MemberVo;
 import kr.co.board.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -21,37 +20,33 @@ public class MemberController {
     @GetMapping("/login")
     public String login(Model model) {
         model.addAttribute("memberVo", new MemberVo());
+        //이미 로그인이 돼있을 시 ??
         return "app/users/login";
     }
 
     @GetMapping("/new")
     public String newMember(Model model) {
-        model.addAttribute("memberCreateForm", new MemberCreateForm());
+        model.addAttribute("memberVo", new MemberVo());
         return "app/users/new";
     }
 
 
     @PostMapping("/new")
-    public String signup(@Validated @ModelAttribute MemberCreateForm memberCreateForm, BindingResult bindingResult) {
+    public String signup(@Validated @ModelAttribute MemberVo memberVo, BindingResult bindingResult) {
         // 양식 오류
         if (bindingResult.hasErrors()) {
             return "app/users/new";
         }
 
-        if (!memberCreateForm.getPassword().equals(memberCreateForm.getPasswordCheck())) {
+        if (!memberVo.getPassword().equals(memberVo.getPasswordCheck())) {
             bindingResult.rejectValue("passwordCheck", "passwordInCorrect",
                     "2개의 패스워드가 일치하지 않습니다.");
             return "app/users/new";
         }
 
-        MemberVo mvo = new MemberVo();
-        mvo.setEmail(memberCreateForm.getEmail());
-        mvo.setUsername(memberCreateForm.getUsername());
-        mvo.setPassword(memberCreateForm.getPassword());
-
         // db 오류
         try {
-            memberService.save(mvo);
+            memberService.save(memberVo);
         }catch(DataIntegrityViolationException e) {
             e.printStackTrace();
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");

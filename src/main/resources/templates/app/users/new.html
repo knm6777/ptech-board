@@ -8,7 +8,7 @@
         </div>
     </div>
     <main class="form-new">
-    <form th:action="@{/member/new}" th:object="${memberCreateForm}" method="post">
+    <form th:action="@{/member/new}" th:object="${memberVo}" method="post">
         <div th:replace="fragments/form_errors :: formErrorsFragment"></div>
         <div class="mb-3">
             <label for="username" class="form-label">사용자ID</label>
