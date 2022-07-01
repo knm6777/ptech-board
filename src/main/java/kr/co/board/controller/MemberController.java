@@ -20,7 +20,7 @@ public class MemberController {
     @GetMapping("/login")
     public String login(Model model) {
         model.addAttribute("memberVo", new MemberVo());
-        //이미 로그인이 돼있을 시 ??
+        //이미 로그인이 돼있을 시 ?
         return "app/users/login";
     }
 

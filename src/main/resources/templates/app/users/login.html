@@ -9,7 +9,9 @@
     </div>
     <main class="form-login">
         <form th:action="@{/member/login}" th:object="${memberVo}" method="post">
-            <div th:replace="fragments/form_errors :: formErrorsFragment"></div>
+            <th:block th:if="${param.error != null}">
+                <div th:replace="fragments/alert :: alert (type='danger', message='아이디 또는 비밀번호가 올바르지 않습니다.')">Alert</div>
+            </th:block>
             <div class="mb-3">
                 <label for="email" class="form-label">이메일</label>
                 <input type="text" th:field="*{username}" class="form-control">

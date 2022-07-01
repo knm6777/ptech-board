@@ -2,19 +2,20 @@
 <body lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/base}"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-<div layout:fragment="content" class="main-content">
-    <div class="main-content">
-        <div class="container py-4">
-            <div class="p-5 mb-4 bg-light rounded-3">
-                <div class="container-fluid py-5">
-                    <h1 class="display-5 fw-bold">PROMPT TECHNOLOGY</h1>
-                    <p class="col-md-8 fs-4">방문해주셔서 감사합니다!</p>
-                    <button class="btn btn-primary btn-lg" type="button">글 쓰러 가기</button>
-                </div>
+    <div layout:fragment="content" class="main-content">
+        <div class="main-content">
+            <div class="container py-4">
+                <div class="p-5 mb-4 bg-light rounded-3">
+                    <div class="container-fluid py-5">
+                        <h1 class="display-5 fw-bold">PROMPT TECHNOLOGY</h1>
+                        <span class="col-md-8 fs-4" sec:authorize="isAuthenticated()" sec:authentication="name"></span>
+                        <span class="col-md-8 fs-4" sec:authorize="isAuthenticated()">님 환영합니다~</span>
+                        <p class="col-md-8 fs-4">방문해주셔서 감사합니다!</p>
+                        <button class="btn btn-primary btn-lg" type="button">글 쓰러 가기</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </body>
 </html>
