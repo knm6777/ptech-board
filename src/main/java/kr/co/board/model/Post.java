@@ -23,15 +23,15 @@ public class Post {
 
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
-
     @CreationTimestamp
     private Instant createdAt;
 
-    @UpdateTimestamp
-    private Instant updatedAt;
+//    @UpdateTimestamp
+//    private Instant updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @Builder
     public Post(String title, String content, Member member) {
