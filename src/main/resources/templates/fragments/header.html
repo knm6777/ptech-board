@@ -25,7 +25,7 @@
                     <a class="nav-link active" aria-current="page" th:href="@{/}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">자유 게시판</a>
+                    <a class="nav-link" th:href="@{/posts/}">자유 게시판</a>
                 </li>
                 <li class="nav-item">
                     <a sec:authorize="isAnonymous()" class="nav-link" th:href="@{/member/login}">로그인</a>

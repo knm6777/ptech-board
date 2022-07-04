@@ -64,6 +64,8 @@ public class MemberService implements UserDetailsService {
                     .member(mem2).build();
             roleRepository.save(testUserRole);
         }
+
+
     }
 
     @Transactional

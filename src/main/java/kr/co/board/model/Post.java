@@ -6,9 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.Instant;
+import java.time.*;
 
 @Entity
 @Getter
@@ -23,11 +24,9 @@ public class Post {
 
     private String content;
 
-    @CreationTimestamp
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
     private Instant createdAt;
-
-//    @UpdateTimestamp
-//    private Instant updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -35,8 +34,11 @@ public class Post {
 
     @Builder
     public Post(String title, String content, Member member) {
+        LocalDate localDate = LocalDate.now();
+
         this.title = title;
         this.content = content;
         this.member = member;
+        this.createdAt = LocalDateTime.of(localDate, LocalTime.MIDNIGHT).atZone(ZoneId.systemDefault()).toInstant();
     }
 }
