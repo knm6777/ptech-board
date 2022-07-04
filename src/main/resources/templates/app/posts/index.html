@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <body lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <div layout:fragment="content" class="main-content">
-    <div class="main-content">
     <div class="table-responsive clearfix">
         <table class="table table-hover">
             <thead>
             <tr>
-                <th>번호</th>
-                <th>제목</th>
-                <th>작성자</th>
-                <th>등록일</th>
-                <th>조회 수</th>
+                <th style="width: 10%">번호</th>
+                <th style="width: 50%">제목</th>
+                <th style="width: 20%">작성자</th>
+                <th style="width: 20%">등록일</th>
             </tr>
             </thead>
             <tbody>
             <tr th:if="${not #lists.isEmpty(postList)}" th:each="row : ${postList}">
+                <td th:text="${row.id}"></td>
                 <td class="text-left">
-                    <a th:href="@{/posts/( id=${row.id} )}" th:text="${row.title}"></a>
+                    <a th:href="@{/posts/details(id = ${row.id})}" th:text="${row.title}"></a>
                 </td>
                 <td th:text="${row.member.getUsername()}"></td>
                 <td th:text="${#temporals.format( row.createdAt, 'yyyy-MM-dd' )}"></td>
@@ -29,12 +29,9 @@
             </tr>
             </tbody>
         </table>
-
         <div class="btn_wrap text-right">
             <a th:href="@{#}" class="btn btn-primary waves-effect waves-light">Write</a>
         </div>
     </div>
-    </div>
-</div>
-</body>
+</div></body>
 </html>

@@ -45,12 +45,12 @@ public class PostController {
         return "redirect:/posts/" + post.getId();
     }
 
-    @GetMapping("/{id}")
-    public String show(@PathVariable("id") Long id, Model model) {
+    @GetMapping("/details")
+    public String show(@RequestParam Long id, Model model) {
         Post post = postService.findById(id);
         model.addAttribute("post", post);
-        this.activateNav(model);
-        return "app/posts/show";
+        //this.activateNav(model);
+        return "app/posts/detail";
     }
 
     public void activateNav(Model model) {

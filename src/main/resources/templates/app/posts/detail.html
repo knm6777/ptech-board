@@ -1,10 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
+<body lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<div layout:fragment="content" class="main-content">
+    <div class="container my-3 p-4 bg-white rounded-3">
+        <h1 th:text="${post.title}"></h1>
+        <div class="fs-6" th:text="'작성자: ' + ${post.getMember().getUsername()}"></div>
+        <div class="fs-6" th:text="'최종 수정일: ' + ${#dates.format(post.createdAt, 'yyyy.MM.dd HH:mm')}"></div>
+        <hr>
+        <div th:utext="${post.getContent()}"></div>
+            <hr>
+        </div>
+        <hr>
+    </div>
+</div>
 </body>
-</html>
+
+</th:block>
