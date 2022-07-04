@@ -1,10 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
+<body lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<div layout:fragment="content" class="main-content">
+    <form id="post-form"
+          th:object="${post}"
+          th:action="@{'/posts'}"
+          method="post"
+          enctype="multipart/form-data">
+        <input type="hidden" name="id" th:field="*{id}">
+        <input type="text" id="title" name="title" class="form-control mb-3" th:field="*{title}" placeholder="제목을 입력하세요.">
+        <textarea id="summernote" name="content" th:field="*{content}"></textarea>
+    </form>
+</div>
+<th:block layout:fragment="scripts">
+<script>
+    $('#summernote').summernote({
+        placeholder: '내용을 입력하세요',
+        lineHeights: ['0.2', '0.3', '0.4', '0.5', '0.6', '0.8', '1.0', '1.2', '1.4', '1.5', '2.0', '3.0'],
+        fontNames: ['Arial', 'Comic Sans MS',  'sans-serif', 'Noto Sans CJK Kr', '나눔바른고딕', '나눔고딕', '나눔손글씨체', '한돋움체', '나눔명조', '나눔명조에코', '마루부리'],
+        fontNamesIgnoreCheck : ['Arial', 'Comic Sans MS',  'sans-serif', 'Noto Sans CJK Kr', '나눔바른고딕', '나눔고딕', '나눔손글씨체', '한돋움체', '나눔명조', '나눔명조에코', '마루부리'],
+        toolbar: [
+            ['font', ['fontname', 'fontsize', 'fontsizeunit']],
+            ['height',['height']],
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture']],
+            ['view', ['fullscreen', 'codeview', 'help']],
+        ],
+        callbacks: {
+            onImageUpload : function(files) {
+                self.sendImg(files, $(this));
+            }
+        },
+        lang: 'ko-KR',
+        height: 400,
+    });
+</script>
+</th:block>
 </body>
-</html>

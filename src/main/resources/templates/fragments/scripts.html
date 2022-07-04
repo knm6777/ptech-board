@@ -2,14 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <th:block th:fragment="scripts" xmlns:th="http://www.thymeleaf.org">
+
     <!-- include summernote css/js -->
-    <script th:src="@{/summernote/summernote-lite.js}"></script>
-    <link rel="stylesheet" type="text/css" th:href="@{/summernote/summernote-lite.css}">
-
-
-    <form method="post">
-        <textarea id="summernote" name="editor-data"></textarea>
-    </form>
+    <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script th:src="@{/js/summernote/summernote-lite.min.js}"></script>
+    <script th:src="@{/js/summernote/summernote-ko-KR.min.js}"></script>
+<!--    <script th:src="@{/js/summernote/SummernoteManager.js}"></script>-->
 
 </th:block>
 </body>
