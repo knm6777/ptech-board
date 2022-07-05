@@ -45,7 +45,6 @@ public class Post {
         this.member = member;
         this.createdAt = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
         this.updatedAt = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
-
     }
 
     public void update(PostVo vo) {

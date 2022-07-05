@@ -37,9 +37,9 @@ public class PostController {
     @PostMapping("")
     public String create(@ModelAttribute PostVo vo, @CurrentUser Member currentMember) throws IOException {
         Post post = Post.builder()
-                .title(vo.getTitle())
-                .content(vo.getContent())
-                .member(currentMember).build();
+                    .title(vo.getTitle())
+                    .content(vo.getContent())
+                    .member(currentMember).build();
         postService.save(post);
 //        if (vo.hasFile()) {
         return "redirect:/posts/details?id=" + post.getId();
@@ -63,25 +63,27 @@ public class PostController {
         return "app/posts/new";
     }
 
-    @PutMapping("/{id}")
-    @ResponseBody
-    public PostDto update(@PathVariable("id") Long id, @ModelAttribute PostVo vo, @CurrentUser Member currentMember) throws Exception {
+    @PutMapping("")
+    public String update(Long id, @ModelAttribute PostVo vo, @CurrentUser Member currentMember) throws Exception {
         Post postForUpdate = postService.findById(id);
         if (!postForUpdate.isSameMember(currentMember)) {
             throw new Exception("수정 권한이 없습니다.");
         }
         postForUpdate.update(vo);
         postService.save(postForUpdate);
-        return new PostDto(postForUpdate);
+
+        return "redirect:/posts";
     }
 
     @DeleteMapping("/{id}")
-    public @ResponseBody PostDto delete(@PathVariable("id") Long id, @CurrentUser Member currentMember) throws Exception {
+    public String delete(@PathVariable("id") Long id, @CurrentUser Member currentMember) throws Exception {
         Post post = postService.findById(id);
         if (!post.isSameMember(currentMember)) {
             throw new Exception("삭제 권한이 없습니다.");
         }
-        return new PostDto(postService.deleteById(id));
+        new PostDto(postService.deleteById(id));
+
+        return "redirect:/posts/details?id=" + post.getId();
     }
 
     public void activateNav(Model model) {

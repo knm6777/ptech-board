@@ -14,7 +14,9 @@
             <hr>
         <div class="d-flex justify-content-end">
             <a class="btn btn-secondary mx-1" th:href="@{'/posts'}">목록</a>
-            <button id="post-delete-btn" class="btn btn-danger mx-1 btn-delete">삭제</button>
+            <form th:action="@{/member/login}" th:object="${post.getId()}" method="post">
+                <button id="post-delete-btn" class="btn btn-danger mx-1 btn-delete" type="submit">삭제</button>
+            </form>
             <a class="btn btn-warning mx-1" th:href="@{'/posts/' + ${post.getId()} + '/edit'}">수정</a>
         </div>
         </div>
