@@ -6,6 +6,8 @@ import kr.co.board.model.Role;
 import kr.co.board.model.enums.Author;
 import kr.co.board.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -22,6 +24,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     //private final FileService fileService;
+    Pageable pageable = PageRequest.of(1, 5);
 
     public Post save(Post post) throws IOException {
         return postRepository.save(post);

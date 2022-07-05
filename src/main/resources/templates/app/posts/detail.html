@@ -4,8 +4,10 @@
       layout:decorate="~{layouts/base}"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <div layout:fragment="content" class="main-content">
-    <div class="container my-3 p-4 bg-white rounded-3">
-        <h1 th:text="${post.title}"></h1>
+    <br>
+    <div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
+    <div class="container my-3 p-4 bg-white rounded-3"><h1 th:text="${post.title}"></h1>
+
         <div class="fs-6" th:text="'작성자: ' + ${post.getMember().getUsername()}"></div>
         <div class="fs-6" th:text="'최종 등록일: ' + ${#dates.format(post.createdAt, 'yyyy.MM.dd HH:mm')}"></div>
         <div class="fs-6" th:text="'최종 수정일: ' + ${#dates.format(post.updatedAt, 'yyyy.MM.dd HH:mm')}"></div>
@@ -14,12 +16,13 @@
             <hr>
         <div class="d-flex justify-content-end">
             <a class="btn btn-secondary mx-1" th:href="@{'/posts'}">목록</a>
-            <form th:action="@{/member/login}" th:object="${post.getId()}" method="post">
+            <form th:action="@{/posts}" th:method="delete">
+                <input type="hidden" name="id" th:field="*{post.id}">
                 <button id="post-delete-btn" class="btn btn-danger mx-1 btn-delete" type="submit">삭제</button>
             </form>
             <a class="btn btn-warning mx-1" th:href="@{'/posts/' + ${post.getId()} + '/edit'}">수정</a>
         </div>
-        </div>
+    </div>
         <hr>
     </div>
 </div>
