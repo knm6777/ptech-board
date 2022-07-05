@@ -2,6 +2,7 @@ package kr.co.board.controller;
 
 import kr.co.board.model.Member;
 import kr.co.board.model.Post;
+import kr.co.board.model.dto.PostDto;
 import kr.co.board.model.vo.PostVo;
 import kr.co.board.service.PostService;
 import kr.co.board.util.CurrentUser;
@@ -30,7 +31,6 @@ public class PostController {
     public String newPost(Model model) {
         PostVo post = new PostVo();
         model.addAttribute("post", post);
-        this.activateNav(model);
         return "app/posts/new";
     }
 
@@ -42,7 +42,7 @@ public class PostController {
                 .member(currentMember).build();
         postService.save(post);
 //        if (vo.hasFile()) {
-        return "redirect:/posts/" + post.getId();
+        return "redirect:/posts/details?id=" + post.getId();
     }
 
     @GetMapping("/details")
@@ -51,6 +51,37 @@ public class PostController {
         model.addAttribute("post", post);
         //this.activateNav(model);
         return "app/posts/detail";
+    }
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable("id") Long id, Model model, @CurrentUser Member currentMember) throws Exception {
+        Post post = postService.findById(id);
+        if (!post.isSameMember(currentMember)) {
+            throw new Exception("수정 권한이 없습니다.");
+        }
+        model.addAttribute("post", post);
+        this.activateNav(model);
+        return "app/posts/new";
+    }
+
+    @PutMapping("/{id}")
+    @ResponseBody
+    public PostDto update(@PathVariable("id") Long id, @ModelAttribute PostVo vo, @CurrentUser Member currentMember) throws Exception {
+        Post postForUpdate = postService.findById(id);
+        if (!postForUpdate.isSameMember(currentMember)) {
+            throw new Exception("수정 권한이 없습니다.");
+        }
+        postForUpdate.update(vo);
+        postService.save(postForUpdate);
+        return new PostDto(postForUpdate);
+    }
+
+    @DeleteMapping("/{id}")
+    public @ResponseBody PostDto delete(@PathVariable("id") Long id, @CurrentUser Member currentMember) throws Exception {
+        Post post = postService.findById(id);
+        if (!post.isSameMember(currentMember)) {
+            throw new Exception("삭제 권한이 없습니다.");
+        }
+        return new PostDto(postService.deleteById(id));
     }
 
     public void activateNav(Model model) {
