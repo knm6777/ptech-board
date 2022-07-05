@@ -29,7 +29,7 @@ public class Post {
     private Instant createdAt;
 
     @CreatedDate
-    @Column(nullable = false, updatable = false)
+    @Column
     private Instant updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -44,7 +44,6 @@ public class Post {
         this.content = content;
         this.member = member;
         this.createdAt = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
-        this.updatedAt = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
     }
 
     public void update(PostVo vo) {
