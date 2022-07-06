@@ -12,10 +12,9 @@
             <div layout:fragment="content">Page Content</div>
         </div>
 
-        <div th:replace="fragments/footer"></div>
-
         <th:block th:replace="fragments/scripts :: scripts"/>
 
-        <th:block layout:fragment="scripts"></th:block>
     </body>
+    <div th:replace="fragments/footer"></div>
+    <th:block layout:fragment="scripts"></th:block>
 </html>

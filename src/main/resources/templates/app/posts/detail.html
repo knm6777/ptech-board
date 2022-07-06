@@ -10,7 +10,7 @@
 
         <div class="fs-6" th:text="'작성자: ' + ${post.getMember().getUsername()}"></div>
         <div class="fs-6" th:text="'최종 등록일: ' + ${#dates.format(post.createdAt, 'yyyy.MM.dd HH:mm:ss')}"></div>
-        <div class="fs-6" th:text="'최종 수정일: ' + ${#dates.format(post.updatedAt, 'yyyy.MM.dd HH:mm:ss')}"></div>
+        <div class="fs-6" th:text="'최종 수정일: ' + ${post.updatedAt != null ? #dates.format(post.updatedAt, 'yyyy.MM.dd HH:mm:ss') : '-'}"></div>
         <hr>
         <div th:utext="${post.getContent()}"></div>
             <hr>

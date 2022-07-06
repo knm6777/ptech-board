@@ -20,29 +20,26 @@
             </tr>
             </thead>
             <tbody>
-            <tr class="clickable-row" th:scope="row" th:each="post, iter: ${postPage.getContent()}"
-                th:attr="data-url = @{'/posts/' + ${post.getId()}}">
-                <td th:text="${post.getId()}"></td>
-                <td class="text-left" th:text="${post.getTitle()}"></td>
-                <td th:text="${post.getMember().getUsername()}"></td>
-                <td th:text="${#temporals.format( post.createdAt, 'yyyy-MM-dd' )}"></td>
+            <tr class="clickable-row" th:scope="row" th:each="post, iter: ${postPage.getContent()}">
+                    <td th:text="${post.getId()}"></td>
+                    <td class="text-left">
+                        <a th:href="@{/posts/details(id = ${post.id})}" th:text="${post.getTitle()}"></a>
+                    </td>
+                    <td th:text="${post.getMember().getUsername()}"></td>
+                    <td th:text="${#temporals.format( post.createdAt, 'yyyy-MM-dd' )}"></td>
 <!--                <td th:text="${row.viewCnt}"></td>-->
             </tr>
-            <tr th:unless="${postPage != null}">
+            <tr th:if="${postPage == null}">
                 <td colspan="5">조회된 결과가 없습니다.</td>
             </tr>
             </tbody>
         </table>
         <br>
-        <div th:if="${postPage.totalPages > 0}" class="pagination"
-             th:each="pageNumber : ${pageNumbers}">
-            <a th:href="@{/posts(size=${postPage.size}, page=${pageNumber})}"
-               th:text="${pageNumber}"
-               th:class="${pageNumber==postPage.number + 1} ? active"></a>
-        </div>
+
         <div class="d-grid gap-2 d-md-flex justify-content-end">
             <a sec:authorize="isAuthenticated()" th:href="@{/posts/new}" class="btn btn-outline-primary">Write</a>
         </div>
+        <div th:replace="fragments/pagination :: pagination"></div>
     </div>
 </div></body>
 </html>

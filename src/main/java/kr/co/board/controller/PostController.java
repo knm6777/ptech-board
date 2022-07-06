@@ -37,7 +37,7 @@ public class PostController {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(5);
 
-        Page<Post> postPage = postService.getPosts(PageRequest.of(currentPage - 1, pageSize));
+        Page<Post> postPage = postService.getPosts(PageRequest.of(currentPage - 1, pageSize, Sort.by("id").descending()));
 
         model.addAttribute("postPage", postPage);
 
