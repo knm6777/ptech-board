@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,14 +31,9 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("")
-    public String index(Model model,
-                        @RequestParam("page") Optional<Integer> page,
-                        @RequestParam("size") Optional<Integer> size) {
+    public String index(Model model, @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        int currentPage = page.orElse(1);
-        int pageSize = size.orElse(5);
-
-        Page<Post> postPage = postService.getPosts(PageRequest.of(currentPage - 1, pageSize, Sort.by("id").descending()));
+        Page<Post> postPage = postService.getPosts(pageable);
 
         model.addAttribute("postPage", postPage);
 
@@ -48,7 +44,6 @@ public class PostController {
                     .collect(Collectors.toList());
             model.addAttribute("pageNumbers", pageNumbers);
         }
-
         return "app/posts/index";
     }
 

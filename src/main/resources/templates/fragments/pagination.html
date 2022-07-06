@@ -1,9 +1,33 @@
-<nav th:fragment="pagination" th:if="${postPage != null}" class="d-flex justify-content-center" aria-label="Page navigation">
+<nav th:fragment="pagination"
+     th:with="pageNumber = ${postPage.pageable.pageNumber},
+                pageSize = ${postPage.pageable.pageSize},
+                totalPages = ${postPage.totalPages},
+                startPage = ${T(Math).floor(pageNumber / pageSize) * pageSize + 1},
+                tempEndPage = ${startPage + pageSize - 1},
+                endPage = (${tempEndPage > totalPages ? totalPages : tempEndPage})"
+     th:if="${postPage != null}" class="d-flex justify-content-center" aria-label="Page navigation">
+
     <ul class="pagination">
+        <li th:classappend="${postPage.first} ? 'disabled'" class="page-item">
+            <a class="page-link" th:href="${postPage.first} ? '#' : @{/posts(page=${pageNumber}-1)}" aria-label="Previous">
+                <span aria-hidden="true">&lt;</span>
+                <span class="sr-only"></span>
+            </a>
+        </li>
+
+
         <li class="page-item" th:if="${postPage.totalPages > 0}" th:each="pageNumber : ${pageNumbers}">
-            <a class="page-link" th:href="@{/posts(size=${postPage.size}, page=${pageNumber})}"
+            <a class="page-link" th:href="@{/posts(page=${pageNumber}-1)}"
                th:text="${pageNumber}"
                th:classappend="${pageNumber==postPage.number + 1} ? active"></a>
+        </li>
+
+
+        <li th:classappend="${postPage.last} ? 'disabled'" class="page-item">
+            <a class="page-link" th:href="${postPage.last} ? '#' : @{/posts(page=${pageNumber}+1)}" aria-label="Next">
+                <span aria-hidden="true">&gt;</span>
+                <span class="sr-only"></span>
+            </a>
         </li>
     </ul>
 </nav>

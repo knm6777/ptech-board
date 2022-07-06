@@ -24,25 +24,9 @@ public class PostService {
     }
 
     public Page<Post> getPosts(Pageable pageable) {
-        List<Post> posts = postRepository.findAll();
-
-        int pageSize = pageable.getPageSize();
-        int currentPage = pageable.getPageNumber();
-        int startItem = currentPage * pageSize;
-        List<Post> list;
-
-        if (posts.size() < startItem) {
-            list = Collections.emptyList();
-        } else {
-            int toIndex = Math.min(startItem + pageSize, posts.size());
-            list = posts.subList(startItem, toIndex);
-        }
-
-        Page<Post> postPage
-                = new PageImpl<Post>(list, PageRequest.of(currentPage, pageSize), posts.size());
+        Page<Post> postPage = postRepository.findAll(pageable);
 
         return postPage;
-        //return postRepository.findAll(pageable);
     }
 
     public Post findById(Long id) {
