@@ -18,10 +18,8 @@ public class PostService {
         return postRepository.findAll(pageable);
     }
 
-    @Transactional
     public Post findById(Long id) {
         Post post = postRepository.findById(id).orElse(null);
-        postRepository.updateHit(id);
         return post;
     }
 
@@ -32,5 +30,10 @@ public class PostService {
     @Transactional
     public void deleteById(Long id) {
         postRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void updateHit(Long id) {
+        postRepository.updateHit(id);
     }
 }

@@ -1,8 +1,11 @@
 package kr.co.board.controller;
 
+import kr.co.board.model.Comment;
 import kr.co.board.model.Member;
 import kr.co.board.model.Post;
+import kr.co.board.model.vo.CommentVo;
 import kr.co.board.model.vo.PostVo;
+import kr.co.board.service.CommentService;
 import kr.co.board.service.PostService;
 import kr.co.board.util.CurrentUser;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +28,7 @@ import java.util.stream.IntStream;
 @RequestMapping("/posts")
 public class PostController {
     private final PostService postService;
+    private final CommentService commentService;
 
     @GetMapping("")
     public String index(Model model, @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -46,7 +50,18 @@ public class PostController {
     @GetMapping("/{id}")
     public String showPost(@PathVariable Long id, Model model) {
         Post post = postService.findById(id);
+        postService.updateHit(id);
+        Post nextPost = postService.findById(id+1);
+
         model.addAttribute("post", post);
+        model.addAttribute("nextPost", nextPost);
+
+        List<Comment> commentList = commentService.findAllByPostId(id);
+        model.addAttribute("commentList", commentList);
+
+        CommentVo comment = new CommentVo();
+        model.addAttribute("newComment", comment);
+
         return "app/posts/show";
     }
 
@@ -107,4 +122,10 @@ public class PostController {
             return "redirect:/posts";
         }
     }
+
+//    @GetMapping("/{id}/comments")
+//    @ResponseBody
+//    public List<Comment> getComments(@PathVariable("id") Long id) {
+//        return commentService.findAllByPostId(id);
+//    }
 }
