@@ -8,11 +8,15 @@
         </div>
     </div>
     <main class="form-new">
-    <form th:action="@{/member/new}" th:object="${memberVo}" method="post">
+    <form th:action="@{/member}" th:object="${memberVo}" method="post">
         <div th:replace="fragments/form_errors :: formErrorsFragment"></div>
         <div class="mb-3">
             <label for="username" class="form-label">사용자ID</label>
             <input type="text" th:field="*{username}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">이메일</label>
+            <input type="email" th:field="*{email}" class="form-control">
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">비밀번호</label>
@@ -21,10 +25,6 @@
         <div class="mb-3">
             <label for="password" class="form-label">비밀번호 확인</label>
             <input type="password" th:field="*{passwordCheck}" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="email" class="form-label">이메일</label>
-            <input type="email" th:field="*{email}" class="form-control">
         </div>
         <button type="submit" class="btn btn-primary">회원가입</button>
     </form>

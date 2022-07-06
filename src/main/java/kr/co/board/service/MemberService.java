@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +27,7 @@ public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -35,6 +35,20 @@ public class MemberService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Email: " + email + " not found"));
         System.out.println(email + " 로그인 !");
         return new MemberAdapter(member);
+    }
+
+    @Transactional
+    public void save(MemberVo vo) {
+        Member member = Member.builder()
+                .email(vo.getEmail())
+                .password(passwordEncoder.encode(vo.getPassword()))
+                .username(vo.getUsername()).build();
+        memberRepository.save(member);
+        Role role = Role.builder()
+                .author(Author.MEMBER)
+                .member(member).build();
+        member.getRoles().add(role);
+        roleRepository.save(role);
     }
 
     @PostConstruct
@@ -64,19 +78,5 @@ public class MemberService implements UserDetailsService {
                     .member(mem2).build();
             roleRepository.save(testUserRole);
         }
-    }
-
-    @Transactional
-    public void save(MemberVo vo) {
-        Member member = Member.builder()
-                .email(vo.getEmail())
-                .password(passwordEncoder.encode(vo.getPassword()))
-                .username(vo.getUsername()).build();
-        memberRepository.save(member);
-        Role role = Role.builder()
-                .author(Author.MEMBER)
-                .member(member).build();
-        member.getRoles().add(role);
-        roleRepository.save(role);
     }
 }

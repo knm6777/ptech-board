@@ -4,8 +4,9 @@ import kr.co.board.model.vo.PostVo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.data.annotation.CreatedDate;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.*;
@@ -14,8 +15,8 @@ import java.time.*;
 @Getter
 @NoArgsConstructor
 @DynamicUpdate
+@Table(name = "posts")
 public class Post {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,11 +25,11 @@ public class Post {
 
     private String content;
 
-    @CreatedDate
+    @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
 
-    @CreatedDate
+    @UpdateTimestamp
     @Column
     private Instant updatedAt;
 

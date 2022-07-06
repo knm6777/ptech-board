@@ -30,9 +30,8 @@ public class MemberController {
         return "app/users/new";
     }
 
-
-    @PostMapping("/new")
-    public String signup(@Validated @ModelAttribute MemberVo memberVo, BindingResult bindingResult) {
+    @PostMapping("")
+    public String saveMember(@Validated @ModelAttribute MemberVo memberVo, BindingResult bindingResult) {
         // 양식 오류
         if (bindingResult.hasErrors()) {
             return "app/users/new";

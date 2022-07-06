@@ -20,7 +20,7 @@
                 <input type="hidden" name="id" th:field="*{post.id}">
                 <button id="post-delete-btn" class="btn btn-danger mx-1 btn-delete" type="submit">삭제</button>
             </form>
-            <a class="btn btn-warning mx-1" th:href="@{'/posts/' + ${post.getId()} + '/edit'}">수정</a>
+            <a class="btn btn-warning mx-1" th:href="@{'/posts/'+${post.getId()}+'/edit'}">수정</a>
         </div>
     </div>
         <hr>

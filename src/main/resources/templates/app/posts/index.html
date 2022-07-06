@@ -5,9 +5,11 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <div layout:fragment="content" class="main-content">
     <div class="row gy-5">
+        <hr>
         <div class="col d-flex justify-content-center">
             <h2>자유 게시판</h2>
         </div>
+        <hr>
     </div>
     <div class="table-responsive clearfix">
         <table class="table table-hover">
@@ -23,7 +25,7 @@
             <tr class="clickable-row" th:scope="row" th:each="post, iter: ${postPage.getContent()}">
                     <td th:text="${post.getId()}"></td>
                     <td class="text-left">
-                        <a th:href="@{/posts/details(id = ${post.id})}" th:text="${post.getTitle()}"></a>
+                        <a th:href="@{'/posts/'+${post.getId()}}" th:text="${post.getTitle()}"></a>
                     </td>
                     <td th:text="${post.getMember().getUsername()}"></td>
                     <td th:text="${#temporals.format( post.createdAt, 'yyyy-MM-dd' )}"></td>
