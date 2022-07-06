@@ -7,6 +7,11 @@ import kr.co.board.model.vo.PostVo;
 import kr.co.board.service.PostService;
 import kr.co.board.util.CurrentUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +19,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,9 +30,25 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("")
-    public String index(Model model) {
-        List<Post> postList = postService.getPosts();
-        model.addAttribute("postList", postList);
+    public String index(Model model,
+                        @RequestParam("page") Optional<Integer> page,
+                        @RequestParam("size") Optional<Integer> size) {
+
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(5);
+
+        Page<Post> postPage = postService.getPosts(PageRequest.of(currentPage - 1, pageSize));
+
+        model.addAttribute("postPage", postPage);
+
+        int totalPages = postPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
         return "app/posts/index";
     }
 
@@ -70,12 +94,11 @@ public class PostController {
         Post postForUpdate = postService.findById(id);
         if (!postForUpdate.isSameMember(currentMember)) {
             redirAttrs.addFlashAttribute("error", "수정 권한이 없습니다.");
-            return "redirect:/posts/details?id=" + postForUpdate.getId();
         }
         postForUpdate.update(vo);
         postService.save(postForUpdate);
 
-        return "redirect:/posts";
+        return "redirect:/posts/details?id=" + postForUpdate.getId();
     }
 
     @DeleteMapping("")

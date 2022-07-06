@@ -1,20 +1,15 @@
 package kr.co.board.service;
 
-import kr.co.board.model.Member;
 import kr.co.board.model.Post;
-import kr.co.board.model.Role;
-import kr.co.board.model.enums.Author;
 import kr.co.board.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -23,15 +18,31 @@ import java.util.Optional;
 public class PostService {
 
     private final PostRepository postRepository;
-    //private final FileService fileService;
-    Pageable pageable = PageRequest.of(1, 5);
 
     public Post save(Post post) throws IOException {
         return postRepository.save(post);
     }
 
-    public List<Post> getPosts() {
-        return postRepository.findAll();
+    public Page<Post> getPosts(Pageable pageable) {
+        List<Post> posts = postRepository.findAll();
+
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<Post> list;
+
+        if (posts.size() < startItem) {
+            list = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, posts.size());
+            list = posts.subList(startItem, toIndex);
+        }
+
+        Page<Post> postPage
+                = new PageImpl<Post>(list, PageRequest.of(currentPage, pageSize), posts.size());
+
+        return postPage;
+        //return postRepository.findAll(pageable);
     }
 
     public Post findById(Long id) {
@@ -42,14 +53,7 @@ public class PostService {
     @Transactional
     public Post deleteById(Long id) {
         Post post = this.findById(id);
-//        if (!Objects.isNull(post.getFile())) {
-//            fileService.deleteFileById(post.getFile().getId());
-//        }
         postRepository.delete(post);
         return post;
     }
-//
-//    public Page<Post> findAll(Pageable pageable) {
-//        return postRepository.findAllWithMemberAndFile(pageable);
-//    }
 }
