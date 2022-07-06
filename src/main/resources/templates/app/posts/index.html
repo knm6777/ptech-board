@@ -16,9 +16,11 @@
             <thead>
             <tr>
                 <th scope="col" style="width: 10%">번호</th>
-                <th scope="col" style="width: 50%">제목</th>
+                <th scope="col" style="width: 40%">제목</th>
                 <th scope="col" style="width: 20%">작성자</th>
                 <th scope="col" style="width: 20%">등록일</th>
+                <th scope="col" style="width: 10%">조회수</th>
+
             </tr>
             </thead>
             <tbody>
@@ -29,7 +31,7 @@
                     </td>
                     <td th:text="${post.getMember().getUsername()}"></td>
                     <td th:text="${#temporals.format( post.createdAt, 'yyyy-MM-dd' )}"></td>
-<!--                <td th:text="${row.viewCnt}"></td>-->
+                    <td th:text="${post.getHit()}"></td>
             </tr>
             <tr th:if="${postPage == null}">
                 <td colspan="5">조회된 결과가 없습니다.</td>

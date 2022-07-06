@@ -33,6 +33,8 @@ public class Post {
     @Column
     private Instant updatedAt;
 
+    private int hit;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -44,6 +46,7 @@ public class Post {
         this.title = title;
         this.content = content;
         this.member = member;
+        this.hit = 0;
         this.createdAt = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
     }
 

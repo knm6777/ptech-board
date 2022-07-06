@@ -7,7 +7,6 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,8 +18,11 @@ public class PostService {
         return postRepository.findAll(pageable);
     }
 
+    @Transactional
     public Post findById(Long id) {
-        return postRepository.findById(id).orElse(null);
+        Post post = postRepository.findById(id).orElse(null);
+        postRepository.updateHit(id);
+        return post;
     }
 
     public Post save(Post post) throws IOException {
