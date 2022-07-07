@@ -26,7 +26,6 @@
             <tr class="clickable-row" th:scope="row" th:each="post, iter: ${postPage.getContent()}">
                     <td th:text="${post.getId()}"></td>
                     <td class="text-left">
-<!--                        <a th:href="@{'/posts/'+${post.getId()}}" th:text="${post.getTitle()}"></a>-->
                         <a th:href="@{'/posts/'+${post.getId()}}" th:text="${post.getComments().size() >  0  ? post.getTitle() + ' (' + post.comments.size() + ')' : post.getTitle()}"></a>
                     </td>
                     <td th:text="${post.getMember().getUsername()}"></td>
