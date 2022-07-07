@@ -27,7 +27,6 @@ public class MemberController {
     @GetMapping("/login")
     public String login(HttpServletRequest request, Model model) {
 
-        // 세션이 이미 있다면 그 세션을 돌려주고 없으면 새로 생성
         HttpSession session = request.getSession(false);
         String errorMessage = null;
         if (session != null) {

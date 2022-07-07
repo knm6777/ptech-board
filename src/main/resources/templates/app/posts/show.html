@@ -13,6 +13,16 @@
         <div class="fs-6" th:text="'최종 수정일: ' + ${post.updatedAt != null ? #dates.format(post.updatedAt, 'yyyy.MM.dd HH:mm:ss') : '-'}"></div>
         <hr>
         <div th:utext="${post.getContent()}"></div>
+        <div th:if="${post.getFile() != null}" th:scope="row">
+            <hr>
+            <h5>첨부파일</h5>
+            <div class="row">
+                <div class="col">
+                    <a th:text="${post.getFile().getOriginalName()}"
+                       th:href="@{/files/{id}(id = ${post.getFile().getId()})}"></a>
+                </div>
+            </div>
+        </div>
             <hr>
         <div class="d-flex justify-content-end">
             <a class="btn btn-secondary mx-1" th:href="@{'/posts'}">목록</a>

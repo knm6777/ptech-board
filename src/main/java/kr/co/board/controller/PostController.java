@@ -6,6 +6,7 @@ import kr.co.board.model.Post;
 import kr.co.board.model.vo.CommentVo;
 import kr.co.board.model.vo.PostVo;
 import kr.co.board.service.CommentService;
+import kr.co.board.service.FileService;
 import kr.co.board.service.PostService;
 import kr.co.board.util.CurrentUser;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ import java.util.stream.IntStream;
 public class PostController {
     private final PostService postService;
     private final CommentService commentService;
+    private final FileService fileService;
 
     @GetMapping("")
     public String index(Model model, @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -69,6 +71,7 @@ public class PostController {
     public String newPost(Model model) {
         PostVo post = new PostVo();
         model.addAttribute("post", post);
+
         return "app/posts/new";
     }
 
@@ -79,6 +82,10 @@ public class PostController {
                     .content(vo.getContent())
                     .member(currentMember).build();
         postService.save(post);
+
+        if (vo.hasFile()) {
+            fileService.saveAttachment(vo.getFile(), post);
+        }
 
         return "redirect:/posts/" + post.getId();
     }
@@ -96,6 +103,7 @@ public class PostController {
          */
 
         model.addAttribute("post", post);
+
         return "app/posts/new";
     }
 
@@ -107,6 +115,7 @@ public class PostController {
         }
         postForUpdate.update(vo);
         postService.save(postForUpdate);
+        fileService.updateAttachment(postForUpdate, vo.getDeleteFileIds(), vo.getFile());
 
         return "redirect:/posts/" + postForUpdate.getId();
     }
