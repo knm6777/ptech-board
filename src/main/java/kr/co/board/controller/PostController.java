@@ -60,7 +60,7 @@ public class PostController {
         model.addAttribute("commentList", commentList);
 
         CommentVo comment = new CommentVo();
-        model.addAttribute("newComment", comment);
+        model.addAttribute("comment", comment);
 
         return "app/posts/show";
     }
@@ -122,10 +122,4 @@ public class PostController {
             return "redirect:/posts";
         }
     }
-
-//    @GetMapping("/{id}/comments")
-//    @ResponseBody
-//    public List<Comment> getComments(@PathVariable("id") Long id) {
-//        return commentService.findAllByPostId(id);
-//    }
 }

@@ -51,4 +51,8 @@ public class Comment {
     public void assignPost(Post post) {
         this.post = post;
     }
+
+    public boolean isSameMember(Member member) {
+        return this.member.getId().equals(member.getId());
+    }
 }

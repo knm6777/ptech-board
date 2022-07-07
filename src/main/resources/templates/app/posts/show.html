@@ -25,7 +25,7 @@
 
         <!--댓글-->
         <div class="justify-content-end">
-            <form id="post-form" th:object="${newComment}" th:action="@{'/comments'}" th:method="post"
+            <form id="post-form" th:object="${comment}" th:action="@{'/comments'}" th:method="post"
                   enctype="multipart/form-data">
                 <hr>
                 <input type="hidden" name="id" th:field="${post.id}">
@@ -40,20 +40,26 @@
                 <hr>
             </form>
         </div>
-            <div class="justify-content-start">
-            <div class="clickable-row" th:scope="row" th:each="comment, iter: ${commentList}">
-                <a th:text="${comment.member.getUsername()}"></a>
-                <small><a th:text="${#temporals.format( comment.createdAt, 'yyyy-MM-dd HH:mm:ss' )}"></a></small>
-                <div class="h5" th:text="${comment.content}"></div>
-                <hr>
-            </div>
+        <div class="justify-content-start">
+                <div class="clickable-row" th:scope="row" th:each="comment, iter: ${commentList}">
+                    <form id="comment-form" th:action="@{/comments}" th:method="delete">
+                    <small><a th:text="${comment.member.getUsername() +' | '}"></a></small>
+                    <small><a th:text="${#temporals.format( comment.createdAt, 'yyyy-MM-dd HH:mm:ss' )}"></a></small>
+                    <div class="d-flex">
+                        <div class="col-lg-11" th:text="${comment.content}"></div>
+                        <input type="hidden" name="id" th:value="${comment.id}">
+                        <button type="submit" form="comment-form" class="btn-close justify-content-lg-end" aria-label="Close"></button>
+                    </div>
+                    <hr>
+                    </form>
+                </div>
         </div>
         <div class="d-flex gap-2 justify-content-start">
             <div>
-            <a class="btn btn-light btn-sm" th:href="${post.getId()-1 < 1 ? '#' : '/posts/'  + (post.getId()-1)}" th:text="${post.getId()-1 < 1 ? '글이 없습니다' : '이전글'}"></a>
+            <a class="btn btn-light btn-sm" th:href="${post.getId()-1 < 1 ? '#' : '/posts/'  + (post.getId()-1)}" th:text="${post.getId()-1 < 1 ? '이전글이 없습니다' : '이전글'}"></a>
             </div>
             <div>
-            <a class="btn btn-light btn-sm" th:href="${nextPost == null ? '#' : '/posts/' + (post.getId()+1)}" th:text="${nextPost == null ? '글이 없습니다' : '다음글'}"></a>
+            <a class="btn btn-light btn-sm" th:href="${nextPost == null ? '#' : '/posts/' + (post.getId()+1)}" th:text="${nextPost == null ? '다음글이 없습니다' : '다음글'}"></a>
             </div>
         </div>
     </div>

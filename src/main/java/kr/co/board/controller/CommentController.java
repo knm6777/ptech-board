@@ -9,10 +9,8 @@ import kr.co.board.service.PostService;
 import kr.co.board.util.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -32,9 +30,15 @@ public class CommentController {
         return "redirect:/posts/" + post.getId();
     }
 
-    @PostMapping("/{id}/delete")
-    public String delete(@PathVariable("id") Long id) {
-        Comment deletedComment = commentService.deleteById(id);
+    @DeleteMapping("")
+    public String delete(Long id, @CurrentUser Member currentMember, RedirectAttributes redirAttrs) {
+        Comment deletedComment = commentService.findById(id);
+
+        if (!deletedComment.isSameMember(currentMember)) {
+            redirAttrs.addFlashAttribute("error", "삭제 권한이 없습니다.");
+        } else {
+            commentService.deleteById(id);
+        }
         return "redirect:/posts/" + deletedComment.getPost().getId();
     }
 }
