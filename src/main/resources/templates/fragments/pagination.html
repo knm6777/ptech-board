@@ -22,7 +22,6 @@
                th:classappend="${pageNumber==postPage.number + 1} ? active"></a>
         </li>
 
-
         <li th:classappend="${postPage.last} ? 'disabled'" class="page-item">
             <a class="page-link" th:href="${postPage.last} ? '#' : @{/posts(page=${pageNumber}+1)}" aria-label="Next">
                 <span aria-hidden="true">&gt;</span>

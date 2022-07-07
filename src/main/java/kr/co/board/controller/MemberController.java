@@ -3,13 +3,20 @@ package kr.co.board.controller;
 import kr.co.board.model.vo.MemberVo;
 import kr.co.board.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.AuthenticationException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+@Slf4j
 @Controller
 @RequestMapping("/member")
 @RequiredArgsConstructor
@@ -18,9 +25,21 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute("memberVo", new MemberVo());
-        //이미 로그인이 돼있을 시 ?
+    public String login(HttpServletRequest request, Model model) {
+
+        // 세션이 이미 있다면 그 세션을 돌려주고 없으면 새로 생성
+        HttpSession session = request.getSession(false);
+        String errorMessage = null;
+        if (session != null) {
+            AuthenticationException ex = (AuthenticationException) session
+                    .getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+            if (ex != null) {
+                errorMessage = ex.getMessage();
+                log.error("ERROR ====== " + errorMessage);
+            }
+        }
+        model.addAttribute("errorMessage", errorMessage);
+
         return "app/users/login";
     }
 

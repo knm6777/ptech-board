@@ -8,17 +8,17 @@
         </div>
     </div>
     <main class="form-login">
-        <form th:action="@{/member/login}" th:object="${memberVo}" method="post">
+        <form class="form-login" th:action="@{/member/login}" method="post">
             <th:block th:if="${param.error != null}">
                 <div th:replace="fragments/alert :: alert (type='danger', message='아이디 또는 비밀번호가 올바르지 않습니다.')">Alert</div>
             </th:block>
             <div class="mb-3">
                 <label for="email" class="form-label">이메일</label>
-                <input type="text" th:field="*{username}" class="form-control">
+                <input type="text" name="username" class="form-control">
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">비밀번호</label>
-                <input type="password" th:field="*{password}" class="form-control">
+                <input type="password" name="password" class="form-control">
             </div>
 
             <button type="submit" class="btn btn-primary">로그인</button>

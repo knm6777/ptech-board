@@ -33,7 +33,6 @@ public class MemberService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Email: " + email + " not found"));
-        System.out.println(email + " 로그인 !");
         return new MemberAdapter(member);
     }
 
