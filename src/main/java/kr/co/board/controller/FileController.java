@@ -24,10 +24,4 @@ public class FileController {
     public ResponseEntity<?> download(@PathVariable("id") Long id) throws IOException {
         return fileService.downloadFileById(id);
     }
-
-    @PostMapping("/summernote")
-    public ResponseEntity<?> uploadImages(MultipartFile[] multipartFiles) throws IOException {
-        List<File> images = fileService.saveImages(multipartFiles);
-        return ResponseEntity.ok().body(images);
-    }
 }

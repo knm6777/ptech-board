@@ -12,6 +12,7 @@ import java.time.Instant;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "files")
 public class File {
 
     @Id

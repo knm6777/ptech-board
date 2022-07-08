@@ -16,6 +16,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -76,15 +78,20 @@ public class PostController {
     }
 
     @PostMapping("")
-    public String savePost(@ModelAttribute PostVo vo, @CurrentUser Member currentMember) throws IOException {
+    public String savePost(@CurrentUser Member currentMember, @Validated @ModelAttribute(name = "post") PostVo postVo, BindingResult bindingResult) throws IOException {
+        if (bindingResult.hasErrors()) {
+            return "app/posts/new";
+        }
+
         Post post = Post.builder()
-                    .title(vo.getTitle())
-                    .content(vo.getContent())
-                    .member(currentMember).build();
+                .title(postVo.getTitle())
+                .content(postVo.getContent())
+                .member(currentMember).build();
+
         postService.save(post);
 
-        if (vo.hasFile()) {
-            fileService.saveAttachment(vo.getFile(), post);
+        if (postVo.hasFile()) {
+            fileService.saveAttachment(postVo.getFile(), post);
         }
 
         return "redirect:/posts/" + post.getId();
@@ -93,23 +100,23 @@ public class PostController {
     @GetMapping("/{id}/edit")
     public String updatePost(@PathVariable("id") Long id, Model model, @CurrentUser Member currentMember, RedirectAttributes redirAttrs) {
         Post post = postService.findById(id);
+
         if (!post.isSameMember(currentMember)) {
             redirAttrs.addFlashAttribute("error", "수정 권한이 없습니다.");
             return "redirect:/posts/" + post.getId();
         }
-
-        /*
-         newPost랑 합치는게 나은가?
-         */
-
         model.addAttribute("post", post);
 
         return "app/posts/new";
     }
 
     @PutMapping("")
-    public String updatePost(Long id, @ModelAttribute PostVo vo, @CurrentUser Member currentMember, RedirectAttributes redirAttrs) throws Exception {
+    public String updatePost(Long id, @ModelAttribute PostVo vo, @CurrentUser Member currentMember,
+                             RedirectAttributes redirAttrs, BindingResult bindingResult) throws Exception {
         Post postForUpdate = postService.findById(id);
+        if (bindingResult.hasErrors()) {
+            return "redirect:/posts/" + postForUpdate.getId();
+        }
         if (!postForUpdate.isSameMember(currentMember)) {
             redirAttrs.addFlashAttribute("error", "수정 권한이 없습니다.");
         }

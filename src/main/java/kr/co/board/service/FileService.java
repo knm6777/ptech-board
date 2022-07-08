@@ -81,17 +81,6 @@ public class FileService {
         return file;
     }
 
-    private List<File> createFiles(List<MultipartFile> multipartFileList) {
-        List<File> files = new ArrayList<>();
-        for (int i=0; i < multipartFileList.size(); i++) {
-            this.sequence = i;
-            File file = createFile(multipartFileList.get(i));
-            files.add(file);
-        }
-        this.sequence = 0;
-        return files;
-    }
-
     public File findById(Long id) {
         Optional<File> optionalFile = fileRepository.findById(id);
         return optionalFile.orElse(null);
@@ -117,6 +106,9 @@ public class FileService {
             this.deleteAllFileById(deleteFileIds);
         }
         if (!multipartFile.isEmpty()) {
+            if(post.getFile().getOriginalName().equals(multipartFile.getOriginalFilename())){
+                return;
+            }
             this.saveAttachment(multipartFile, post);
         }
     }
@@ -134,24 +126,5 @@ public class FileService {
         for (Long id: deleteFileIds) {
             this.deleteFileById(id);
         }
-    }
-
-    @Transactional
-    public void deleteAllFile(List<File> files) {
-        for (File file : files) {
-            this.deleteFileById(file.getId());
-        }
-    }
-
-    @Transactional
-    public List<File> saveImages(MultipartFile[] multipartFiles) throws IOException {
-        List<File> files = new ArrayList<>();
-        for (MultipartFile multipartFile: multipartFiles) {
-            File file = createFile(multipartFile);
-            file = fileRepository.save(file);
-            uploadFile(multipartFile, file);
-            files.add(file);
-        }
-        return files;
     }
 }
