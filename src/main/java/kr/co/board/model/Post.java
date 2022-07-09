@@ -16,7 +16,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @DynamicUpdate
 @Table(name = "posts")
@@ -69,6 +68,10 @@ public class Post {
         this.title = vo.getTitle();
         this.content = vo.getContent();
         this.updatedAt = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
+    }
+
+    public void deleteFile() {
+        this.file = null;
     }
 
     public boolean isSameMember(Member member) {

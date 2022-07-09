@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.net.URLEncoder;
 import java.nio.file.Files;
@@ -56,6 +57,7 @@ public class FileService {
     @Transactional
     public void saveAttachment(MultipartFile multipartFile, Post post) throws IOException {
         File file = createFile(multipartFile);
+
         file.assignPost(post);
         file = fileRepository.save(file);
         uploadFile(multipartFile, file);
@@ -106,9 +108,6 @@ public class FileService {
             this.deleteFileById(deleteFileId);
         }
         if (!multipartFile.isEmpty()) {
-            if(post.getFile().getOriginalName().equals(multipartFile.getOriginalFilename())){
-                return;
-            }
             this.saveAttachment(multipartFile, post);
         }
     }
@@ -116,18 +115,13 @@ public class FileService {
     @Transactional
     public void deleteFileById(Long id) {
         File fileToDelete = this.findById(id);
-        // setter 사용 괜찮은가..?
         Post p = fileToDelete.getPost();
-        p.setFile(null);
+
+        p.deleteFile();
+
         fileRepository.deleteById(id);
         String path = this.uploadPath + fileToDelete.getRelativePath();
         FileUtils.deleteQuietly(FileUtils.getFile(path));
     }
 
-    @Transactional
-    public void deleteAllFileById(List<Long> deleteFileIds) {
-        for (Long id: deleteFileIds) {
-            this.deleteFileById(id);
-        }
-    }
 }

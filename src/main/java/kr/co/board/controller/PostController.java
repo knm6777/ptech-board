@@ -128,6 +128,7 @@ public class PostController {
         postService.save(postForUpdate);
         fileService.updateAttachment(postForUpdate, vo.getDeleteFileId(), vo.getFile());
 
+
         return "redirect:/posts/" + postForUpdate.getId();
     }
 
