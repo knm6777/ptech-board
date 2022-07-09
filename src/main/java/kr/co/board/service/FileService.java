@@ -116,6 +116,9 @@ public class FileService {
     @Transactional
     public void deleteFileById(Long id) {
         File fileToDelete = this.findById(id);
+        // setter 사용 괜찮은가..?
+        Post p = fileToDelete.getPost();
+        p.setFile(null);
         fileRepository.deleteById(id);
         String path = this.uploadPath + fileToDelete.getRelativePath();
         FileUtils.deleteQuietly(FileUtils.getFile(path));

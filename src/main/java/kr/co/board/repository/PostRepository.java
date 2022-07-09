@@ -23,4 +23,5 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Long> {
 
     @Query(value = "SELECT * FROM posts WHERE id > :id ORDER BY id limit 1", nativeQuery = true)
     Post findNextPost(Long id);
+
 }

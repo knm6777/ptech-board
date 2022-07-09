@@ -116,12 +116,14 @@ public class PostController {
     public String updatePost(Long id, @ModelAttribute PostVo vo, @CurrentUser Member currentMember,
                              RedirectAttributes redirAttrs, BindingResult bindingResult) throws Exception {
         Post postForUpdate = postService.findById(id);
+
         if (bindingResult.hasErrors()) {
             return "redirect:/posts/" + postForUpdate.getId();
         }
         if (!postForUpdate.isSameMember(currentMember)) {
             redirAttrs.addFlashAttribute("error", "수정 권한이 없습니다.");
         }
+
         postForUpdate.update(vo);
         postService.save(postForUpdate);
         fileService.updateAttachment(postForUpdate, vo.getDeleteFileId(), vo.getFile());

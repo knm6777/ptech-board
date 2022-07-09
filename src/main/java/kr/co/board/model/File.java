@@ -34,7 +34,6 @@ public class File {
     private String fileType;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
     private Post post;
 
     @CreationTimestamp
