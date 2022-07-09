@@ -15,6 +15,12 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Long> {
     List<Post> findAll();
 
     @Modifying
-    @Query("update Post p set p.hit = p.hit + 1 where p.id = :id")
-    int updateHit(Long id);
+    @Query("UPDATE Post p SET p.hit = p.hit + 1 WHERE p.id = :id")
+    void updateHit(Long id);
+
+    @Query(value = "SELECT * FROM posts WHERE id < :id ORDER BY id DESC limit 1", nativeQuery = true)
+    Post findPrePost(Long id);
+
+    @Query(value = "SELECT * FROM posts WHERE id > :id ORDER BY id limit 1", nativeQuery = true)
+    Post findNextPost(Long id);
 }

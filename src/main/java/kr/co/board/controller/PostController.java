@@ -55,10 +55,12 @@ public class PostController {
     public String showPost(@PathVariable Long id, Model model) {
         Post post = postService.findById(id);
         postService.updateHit(id);
-        Post nextPost = postService.findById(id+1);
+        Post prePost = postService.findPrePost(id);
+        Post nextPost = postService.findNextPost(id);
 
         model.addAttribute("post", post);
         model.addAttribute("nextPost", nextPost);
+        model.addAttribute("prePost", prePost);
 
         List<Comment> commentList = commentService.findAllByPostId(id);
         model.addAttribute("commentList", commentList);
@@ -122,7 +124,7 @@ public class PostController {
         }
         postForUpdate.update(vo);
         postService.save(postForUpdate);
-        fileService.updateAttachment(postForUpdate, vo.getDeleteFileIds(), vo.getFile());
+        fileService.updateAttachment(postForUpdate, vo.getDeleteFileId(), vo.getFile());
 
         return "redirect:/posts/" + postForUpdate.getId();
     }

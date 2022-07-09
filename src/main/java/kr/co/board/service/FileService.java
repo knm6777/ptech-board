@@ -101,9 +101,9 @@ public class FileService {
     }
 
     @Transactional
-    public void updateAttachment(Post post, List<Long> deleteFileIds, MultipartFile multipartFile) throws IOException {
-        if (!deleteFileIds.isEmpty()) {
-            this.deleteAllFileById(deleteFileIds);
+    public void updateAttachment(Post post, Long deleteFileId, MultipartFile multipartFile) throws IOException {
+        if (deleteFileId != null) {
+            this.deleteFileById(deleteFileId);
         }
         if (!multipartFile.isEmpty()) {
             if(post.getFile().getOriginalName().equals(multipartFile.getOriginalFilename())){
@@ -116,7 +116,7 @@ public class FileService {
     @Transactional
     public void deleteFileById(Long id) {
         File fileToDelete = this.findById(id);
-        fileRepository.delete(fileToDelete);
+        fileRepository.deleteById(id);
         String path = this.uploadPath + fileToDelete.getRelativePath();
         FileUtils.deleteQuietly(FileUtils.getFile(path));
     }
