@@ -56,6 +56,7 @@ public class PostController {
     @GetMapping("/{id}")
     public String showPost(@CurrentUser Member currentMember, @PathVariable Long id, Model model) {
         Post post = postService.findById(id);
+
         if(post == null) {
             throw new CustomException(ErrorCode.POSTS_NOT_FOUND);
         }
