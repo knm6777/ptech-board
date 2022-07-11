@@ -67,7 +67,7 @@ public class MemberController {
     public String indexMypage(@CurrentUser Member member, Model model, @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Post> postPage = postService.findAllByMemberId(member.getId(), pageable);
 
-//        model.addAttribute("comments", commentService.findAllByMemberId(member.getId()));
+        model.addAttribute("comments", commentService.findAllByMember(member));
         model.addAttribute("posts", postPage);
 
         int totalPages = postPage.getTotalPages();

@@ -1,6 +1,7 @@
 package kr.co.board.repository;
 
 import kr.co.board.model.Comment;
+import kr.co.board.model.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,5 +12,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findAllByPostId(Long postId);
 
-//    List<Comment> findAllByMemberId(Long memberId);
+    List<Comment> findAllByMember(Member member);
 }

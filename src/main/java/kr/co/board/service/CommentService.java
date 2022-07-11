@@ -1,6 +1,7 @@
 package kr.co.board.service;
 
 import kr.co.board.model.Comment;
+import kr.co.board.model.Member;
 import kr.co.board.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class CommentService {
         return commentRepository.findAllByPostId(postId);
     }
 
-//    public List<Comment> findAllByMemberId(Long memberId) {
-//        return commentRepository.findAllByMemberId(memberId);
-//    }
+    public List<Comment> findAllByMember(Member member) {
+        return commentRepository.findAllByMember(member);
+    }
 }
