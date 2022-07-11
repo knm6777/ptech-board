@@ -4,16 +4,19 @@ import kr.co.board.model.Comment;
 import kr.co.board.model.Member;
 import kr.co.board.model.Post;
 import kr.co.board.model.vo.CommentVo;
+import kr.co.board.model.vo.PostVo;
 import kr.co.board.service.CommentService;
 import kr.co.board.service.PostService;
 import kr.co.board.util.CurrentUser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/comments")
@@ -28,7 +31,6 @@ public class CommentController {
         if (bindingResult.hasErrors()) {
             return "redirect:/posts/" + post.getId();
         }
-        //해당 댓글의 membberid와 비교해서 수정권한 체크하기
 
         Comment newComment = new Comment(vo);
         newComment.assignMember(currentMember);
@@ -38,12 +40,32 @@ public class CommentController {
         return "redirect:/posts/" + post.getId();
     }
 
+    @PutMapping("")
+    public String updateComment(Long id, Long postId, @ModelAttribute CommentVo vo, @CurrentUser Member currentMember, BindingResult bindingResult) {
+        Comment commentForUpdate = commentService.findById(id);
+
+        //해당 댓글의 membberid와 비교해서 수정권한 체크하기
+
+        if (bindingResult.hasErrors()) {
+            return "redirect:/posts/" + postId;
+        }
+
+        if (commentForUpdate.getMemberId() != currentMember.getId()) {
+            log.error("Error ====== 댓글 수정 권한 없음");
+        }
+
+        commentForUpdate.update(vo);
+        commentService.save(commentForUpdate);
+
+        return "redirect:/posts/" + postId;
+    }
+
     @DeleteMapping("")
-    public String delete(Long id, @CurrentUser Member currentMember, RedirectAttributes redirAttrs) {
+    public String delete(@CurrentUser Member currentMember, Long id) {
         Comment deletedComment = commentService.findById(id);
 
-        if (!deletedComment.isSameMember(currentMember)) {
-            redirAttrs.addFlashAttribute("error", "삭제 권한이 없습니다.");
+        if (deletedComment.getMemberId() != currentMember.getId()) {
+            log.error("Error ====== 댓글 삭제 권한 없음");
         } else {
             commentService.deleteById(id);
         }

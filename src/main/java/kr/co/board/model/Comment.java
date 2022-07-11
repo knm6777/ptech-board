@@ -2,6 +2,7 @@ package kr.co.board.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import kr.co.board.model.vo.CommentVo;
+import kr.co.board.model.vo.PostVo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -45,6 +46,13 @@ public class Comment {
         this.createdAt = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
     }
 
+    public void update(CommentVo vo) {
+        LocalDateTime localDateTime = LocalDateTime.now();
+
+        this.content = vo.getContent();
+        this.createdAt = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
+    }
+
     public void assignMember(Member member) {
         this.member = member;
     }
@@ -53,7 +61,7 @@ public class Comment {
         this.post = post;
     }
 
-    public boolean isSameMember(Member member) {
-        return this.member.getId().equals(member.getId());
+    public long getMemberId() {
+        return this.member.getId();
     }
 }

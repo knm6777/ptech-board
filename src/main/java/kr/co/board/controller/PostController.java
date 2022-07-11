@@ -52,7 +52,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public String showPost(@PathVariable Long id, Model model) {
+    public String showPost(@CurrentUser Member currentMember, @PathVariable Long id, Model model) {
         Post post = postService.findById(id);
         postService.updateHit(id);
         Post prePost = postService.findPrePost(id);
@@ -61,6 +61,7 @@ public class PostController {
         model.addAttribute("post", post);
         model.addAttribute("nextPost", nextPost);
         model.addAttribute("prePost", prePost);
+        model.addAttribute("currentMember", currentMember);
 
         List<Comment> commentList = commentService.findAllByPostId(id);
         model.addAttribute("commentList", commentList);
