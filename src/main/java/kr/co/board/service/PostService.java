@@ -1,5 +1,6 @@
 package kr.co.board.service;
 
+import kr.co.board.model.Member;
 import kr.co.board.model.Post;
 import kr.co.board.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,9 +20,22 @@ public class PostService {
     public Page<Post> findAll(Pageable pageable) {
         return postRepository.findAll(pageable);
     }
+    public Page<Post> findAllByMemberId(Long memberId, Pageable pageable) {
+        return postRepository.findAllByMemberId(memberId, pageable);
+    }
 
     public Post findById(Long id) {
         return postRepository.findById(id).orElse(null);
+    }
+
+    @Transactional
+    public Post findNextPost(Long id){
+        return postRepository.findNextPost(id);
+    }
+
+    @Transactional
+    public Post findPrePost(Long id){
+        return postRepository.findPrePost(id);
     }
 
     public void save(Post post) throws IOException {
@@ -37,13 +52,4 @@ public class PostService {
         postRepository.updateHit(id);
     }
 
-    @Transactional
-    public Post findNextPost(Long id){
-        return postRepository.findNextPost(id);
-    }
-
-    @Transactional
-    public Post findPrePost(Long id){
-        return postRepository.findPrePost(id);
-    }
 }

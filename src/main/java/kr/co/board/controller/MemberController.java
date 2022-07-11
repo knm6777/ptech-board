@@ -1,10 +1,19 @@
 package kr.co.board.controller;
 
+import kr.co.board.model.Member;
+import kr.co.board.model.Post;
 import kr.co.board.model.vo.MemberVo;
+import kr.co.board.service.CommentService;
 import kr.co.board.service.MemberService;
+import kr.co.board.service.PostService;
+import kr.co.board.util.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +24,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.AuthenticationException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Slf4j
 @Controller
@@ -24,6 +36,8 @@ import javax.servlet.http.HttpSession;
 public class MemberController {
 
     private final MemberService memberService;
+    private final CommentService commentService;
+    private final PostService postService;
 
     @GetMapping("/login")
     public String login(HttpServletRequest request, Model model) {
@@ -49,6 +63,24 @@ public class MemberController {
         return "app/users/new";
     }
 
+    @GetMapping("/mypage")
+    public String indexMypage(@CurrentUser Member member, Model model, @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Post> postPage = postService.findAllByMemberId(member.getId(), pageable);
+
+//        model.addAttribute("comments", commentService.findAllByMemberId(member.getId()));
+        model.addAttribute("posts", postPage);
+
+        int totalPages = postPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        return "app/users/mypage";
+    }
+    
     @PostMapping("")
     public String saveMember(@Validated @ModelAttribute MemberVo memberVo, BindingResult bindingResult) {
         // 양식 오류

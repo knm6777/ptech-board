@@ -33,4 +33,8 @@ public class CommentService {
     public List<Comment> findAllByPostId(Long postId) {
         return commentRepository.findAllByPostId(postId);
     }
+
+//    public List<Comment> findAllByMemberId(Long memberId) {
+//        return commentRepository.findAllByMemberId(memberId);
+//    }
 }

@@ -31,7 +31,7 @@
                     <a sec:authorize="isAnonymous()" class="nav-link" th:href="@{/member/new}">회원가입</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" sec:authorize="isAuthenticated()" sec:authentication="name"></a>
+                    <a class="nav-link" sec:authorize="isAuthenticated()" sec:authentication="name" th:href="@{/member/mypage}"></a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <form th:method="post" th:action="@{/member/logout}">

@@ -44,8 +44,6 @@ public class CommentController {
     public String updateComment(Long id, Long postId, @ModelAttribute CommentVo vo, @CurrentUser Member currentMember, BindingResult bindingResult) {
         Comment commentForUpdate = commentService.findById(id);
 
-        //해당 댓글의 membberid와 비교해서 수정권한 체크하기
-
         if (bindingResult.hasErrors()) {
             return "redirect:/posts/" + postId;
         }

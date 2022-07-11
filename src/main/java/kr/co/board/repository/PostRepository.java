@@ -1,6 +1,9 @@
 package kr.co.board.repository;
 
+import kr.co.board.model.Member;
 import kr.co.board.model.Post;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -14,9 +17,7 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Long> {
 
     List<Post> findAll();
 
-    @Modifying
-    @Query("UPDATE Post p SET p.hit = p.hit + 1 WHERE p.id = :id")
-    void updateHit(Long id);
+    Page<Post> findAllByMemberId(Long memberId, Pageable pageable);
 
     @Query(value = "SELECT * FROM posts WHERE id < :id ORDER BY id DESC limit 1", nativeQuery = true)
     Post findPrePost(Long id);
@@ -24,4 +25,7 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Long> {
     @Query(value = "SELECT * FROM posts WHERE id > :id ORDER BY id limit 1", nativeQuery = true)
     Post findNextPost(Long id);
 
+    @Modifying
+    @Query("UPDATE Post p SET p.hit = p.hit + 1 WHERE p.id = :id")
+    void updateHit(Long id);
 }
