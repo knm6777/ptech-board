@@ -1,5 +1,7 @@
 package kr.co.board.controller;
 
+import kr.co.board.exception.CustomException;
+import kr.co.board.exception.ErrorCode;
 import kr.co.board.model.Comment;
 import kr.co.board.model.Member;
 import kr.co.board.model.Post;
@@ -54,6 +56,10 @@ public class PostController {
     @GetMapping("/{id}")
     public String showPost(@CurrentUser Member currentMember, @PathVariable Long id, Model model) {
         Post post = postService.findById(id);
+        if(post == null) {
+            throw new CustomException(ErrorCode.POSTS_NOT_FOUND);
+        }
+
         postService.updateHit(id);
         Post prePost = postService.findPrePost(id);
         Post nextPost = postService.findNextPost(id);

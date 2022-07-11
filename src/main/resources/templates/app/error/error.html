@@ -1,0 +1,8 @@
+<html>
+<div id="error-div" th:object="${errorCode}">
+    <div th:text="${errorCode.status}"></div>
+    <div th:text="${errorCode.message}"></div>
+
+    <a th:href="@{/}">홈 돌아가기</a>
+</div>
+</html>

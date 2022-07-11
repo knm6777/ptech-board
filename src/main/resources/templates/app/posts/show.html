@@ -6,8 +6,8 @@
 <div layout:fragment="content" class="main-content">
     <br>
     <div class="alert alert-danger" role="alert" th:text="${postError}" th:if="${postError}"></div>
-    <div class="container my-3 p-4 bg-white rounded-3"><h1 th:text="${post.title}"></h1>
-
+    <div class="container my-3 p-4 bg-white rounded-3">
+        <h1 th:text="${post.title}"></h1>
         <div class="fs-6" th:text="'작성자: ' + ${post.getMember().getUsername()} + ' | 조회수: ' + ${post.getHit()}"></div>
         <div class="fs-6" th:text="'최종 등록일: ' + ${#dates.format(post.createdAt, 'yyyy.MM.dd HH:mm:ss')}"></div>
         <div class="fs-6" th:text="'최종 수정일: ' + ${post.updatedAt != null ? #dates.format(post.updatedAt, 'yyyy.MM.dd HH:mm:ss') : '-'}"></div>
