@@ -41,13 +41,9 @@ public class FileService {
     @PostConstruct
     public void initializeDirectory() {
         Path attachmentPath = Paths.get(this.uploadPath);
-        Path summernoteImgPath = Paths.get(this.uploadPath + "/summernote");
         try {
             if (!Files.exists(attachmentPath)) {
                 Files.createDirectories(attachmentPath);
-            }
-            if (!Files.exists(summernoteImgPath)) {
-                Files.createDirectories(summernoteImgPath);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -123,5 +119,4 @@ public class FileService {
         String path = this.uploadPath + fileToDelete.getRelativePath();
         FileUtils.deleteQuietly(FileUtils.getFile(path));
     }
-
 }

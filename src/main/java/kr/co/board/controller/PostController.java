@@ -104,7 +104,7 @@ public class PostController {
         Post post = postService.findById(id);
 
         if (!post.isSameMember(currentMember)) {
-            redirAttrs.addFlashAttribute("error", "수정 권한이 없습니다.");
+            redirAttrs.addFlashAttribute("postError", "수정 권한이 없습니다.");
             return "redirect:/posts/" + post.getId();
         }
         model.addAttribute("post", post);
@@ -121,13 +121,12 @@ public class PostController {
             return "redirect:/posts/" + postForUpdate.getId();
         }
         if (!postForUpdate.isSameMember(currentMember)) {
-            redirAttrs.addFlashAttribute("error", "수정 권한이 없습니다.");
+            redirAttrs.addFlashAttribute("postError", "수정 권한이 없습니다.");
         }
 
         postForUpdate.update(vo);
         postService.save(postForUpdate);
         fileService.updateAttachment(postForUpdate, vo.getDeleteFileId(), vo.getFile());
-
 
         return "redirect:/posts/" + postForUpdate.getId();
     }
@@ -136,7 +135,7 @@ public class PostController {
     public String delete(Long id, @CurrentUser Member currentMember, RedirectAttributes redirAttrs) {
         Post post = postService.findById(id);
         if (!post.isSameMember(currentMember)) {
-            redirAttrs.addFlashAttribute("error", "삭제 권한이 없습니다.");
+            redirAttrs.addFlashAttribute("postError", "삭제 권한이 없습니다.");
             return "redirect:/posts/" + post.getId();
         } else {
             postService.deleteById(id);

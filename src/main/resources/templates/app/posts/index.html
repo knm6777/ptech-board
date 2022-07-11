@@ -23,11 +23,9 @@
             </tr>
             </thead>
             <tbody>
-            <tr class="clickable-row" th:scope="row" th:each="post, iter: ${postPage.getContent()}">
+            <tr class="clickable-row" th:scope="row" th:each="post, iter: ${postPage.getContent()}" th:onclick="|location.href='@{/posts/}'+${post.getId()}|">
                     <td th:text="${post.getId()}"></td>
-                    <td class="text-left">
-                        <a th:href="@{'/posts/'+${post.getId()}}" th:text="${post.getComments().size() >  0  ? post.getTitle() + ' (' + post.comments.size() + ')' : post.getTitle()}"></a>
-                    </td>
+                    <td th:text="${post.getComments().size() >  0  ? post.getTitle() + ' (' + post.comments.size() + ')' : post.getTitle()}"></td>
                     <td th:text="${post.getMember().getUsername()}"></td>
                     <td th:text="${#temporals.format( post.createdAt, 'yyyy-MM-dd' )}"></td>
                     <td th:text="${post.getHit()}"></td>

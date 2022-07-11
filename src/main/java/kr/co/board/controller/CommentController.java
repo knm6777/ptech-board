@@ -9,6 +9,8 @@ import kr.co.board.service.PostService;
 import kr.co.board.util.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -20,8 +22,14 @@ public class CommentController {
     private final PostService postService;
 
     @PostMapping("")
-    public String saveComment(@ModelAttribute CommentVo vo, Long id, @CurrentUser Member currentMember) {
-        Post post = postService.findById(id);
+    public String saveComment(@CurrentUser Member currentMember, Long postId, @Validated CommentVo vo, BindingResult bindingResult) {
+        Post post = postService.findById(postId);
+
+        if (bindingResult.hasErrors()) {
+            return "redirect:/posts/" + post.getId();
+        }
+        //해당 댓글의 membberid와 비교해서 수정권한 체크하기
+
         Comment newComment = new Comment(vo);
         newComment.assignMember(currentMember);
         newComment.assignPost(post);

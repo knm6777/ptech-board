@@ -5,7 +5,7 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <div layout:fragment="content" class="main-content">
     <br>
-    <div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
+    <div class="alert alert-danger" role="alert" th:text="${postError}" th:if="${postError}"></div>
     <div class="container my-3 p-4 bg-white rounded-3"><h1 th:text="${post.title}"></h1>
 
         <div class="fs-6" th:text="'작성자: ' + ${post.getMember().getUsername()} + ' | 조회수: ' + ${post.getHit()}"></div>
@@ -38,10 +38,10 @@
             <form id="post-form" th:object="${comment}" th:action="@{'/comments'}" th:method="post"
                   enctype="multipart/form-data">
                 <hr>
-                <input type="hidden" name="id" th:field="${post.id}">
+                <input type="hidden" name="postId" th:value="${post.id}">
                 <div class="row align-items-center">
                     <div class="col-10">
-                        <input type="text" id="content" name="content" class="form-control" th:field="*{content}" placeholder="댓글을 입력하세요.">
+                        <input type="text" class="form-control" th:field="*{content}" placeholder="댓글을 입력하세요." required>
                     </div>
                     <div class="col-2">
                         <input type="submit" class="btn btn-secondary" th:value="댓글저장">
