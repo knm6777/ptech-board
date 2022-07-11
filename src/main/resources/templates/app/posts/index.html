@@ -24,12 +24,16 @@
             </thead>
             <tbody>
             <tr class="clickable-row" th:scope="row" th:each="post, iter: ${postPage.getContent()}" th:onclick="|location.href='@{/posts/}'+${post.getId()}|">
-                    <td th:text="${post.getId()}"></td>
-                    <td th:text="${post.getComments().size() >  0  ? post.getTitle() + ' (' + post.comments.size() + ')' : post.getTitle()}"></td>
-                    <td th:text="${post.getMember().getUsername()}"></td>
-                    <td th:text="${#temporals.format( post.createdAt, 'yyyy-MM-dd' )}"></td>
-                    <td th:text="${post.getHit()}"></td>
+                <td th:text="${post.getId()}"></td>
+                <td>
+                    <span th:text="${post.getComments().size() >  0  ? post.getTitle() + ' (' + post.comments.size() + ')' : post.getTitle()}"></span>
+                    <img th:if="${post.getFile() != null}" th:src="@{/icons/bootstrap-icons-1.8.3/paperclip.svg}" width="15">
+                </td>
+                <td th:text="${post.getMember().getUsername()}"></td>
+                <td th:text="${#temporals.format( post.createdAt, 'yyyy-MM-dd' )}"></td>
+                <td th:text="${post.getHit()}"></td>
             </tr>
+
             <tr th:if="${postPage == null}">
                 <td colspan="5">조회된 결과가 없습니다.</td>
             </tr>

@@ -28,7 +28,7 @@
             <a class="btn btn-secondary mx-1" th:href="@{'/posts'}">목록</a>
             <form th:action="@{/posts}" th:method="delete">
                 <input type="hidden" name="id" th:field="*{post.id}">
-                <button id="post-delete-btn" class="btn btn-danger mx-1 btn-delete" type="submit">삭제</button>
+                <button id="post-delete-btn" class="btn btn-danger mx-1 btn-delete" onclick = "return confirm('정말 삭제하시겠습니까?');">삭제</button>
             </form>
             <a class="btn btn-warning mx-1" th:href="@{'/posts/'+${post.getId()}+'/edit'}">수정</a>
         </div>
@@ -55,17 +55,16 @@
                 <div class="clickable-row" th:scope="row" th:each="comm, iter: ${commentList}">
                     <form id="comment-delete-form" th:action="@{/comments}" th:method="delete">
 <!--                    <form id="comment-update-form" th:action="@{/comments}" th:method="put">-->
-
                         <input type="hidden" name="commentId" th:value="${comm.id}">
                         <small><a th:text="${comm.member.getUsername() +' | '}"></a></small>
                         <small><a th:text="${#temporals.format( comm.createdAt, 'yyyy-MM-dd HH:mm:ss' )}"></a></small>
                     <div class="d-flex">
-                        <div class="col-11 justify-content-start align-self-center" th:text="${comm.content}"></div>
+                        <div class="col-11 justify-content-start align-self-center" th:name="editable-content" th:text="${comm.content}"></div>
                         <input type="hidden" name="id" th:value="${comm.id}">
                         <div class="dropstart justify-content-end" th:if="${comm.member.id == currentMember.id}">
                             <a class="btn btn-secondary dropdown-toggle btn-sm" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"></a>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <li><a class="dropdown-item" href="#" th:onclick="">수정</a></li>
+                                <li><a class="dropdown-item" href="#" th:onclick="">수정아직..</a></li>
                                 <li><a class="dropdown-item" href="#" onclick="document.getElementById('comment-delete-form').submit();">삭제</a></li>
                             </ul>
                         </div>
