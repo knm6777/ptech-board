@@ -1,4 +1,4 @@
-package kr.co.board.exception;
+package kr.co.board.model.enums;
 
 import org.springframework.http.HttpStatus;
 

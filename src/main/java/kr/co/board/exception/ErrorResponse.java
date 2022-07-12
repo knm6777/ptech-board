@@ -1,5 +1,6 @@
 package kr.co.board.exception;
 
+import kr.co.board.model.enums.ErrorCode;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

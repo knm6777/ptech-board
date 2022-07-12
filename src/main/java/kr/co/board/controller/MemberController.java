@@ -69,6 +69,7 @@ public class MemberController {
 
         model.addAttribute("comments", commentService.findAllByMember(member));
         model.addAttribute("posts", postPage);
+        model.addAttribute("member", member);
 
         int totalPages = postPage.getTotalPages();
         if (totalPages > 0) {
@@ -106,7 +107,6 @@ public class MemberController {
             bindingResult.reject("signupFailed", e.getMessage());
             return "app/users/new";
         }
-
         return "redirect:/";
     }
 }

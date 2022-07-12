@@ -41,7 +41,7 @@ public class CommentController {
     }
 
     @PutMapping("")
-    public String updateComment(Long id, Long postId, @ModelAttribute CommentVo vo, @CurrentUser Member currentMember, BindingResult bindingResult) {
+    public String updateComment(Long id, Long postId, @ModelAttribute(name = "updatecomment") CommentVo vo, @CurrentUser Member currentMember, BindingResult bindingResult) {
         Comment commentForUpdate = commentService.findById(id);
 
         if (bindingResult.hasErrors()) {

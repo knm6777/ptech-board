@@ -1,7 +1,7 @@
 package kr.co.board.controller;
 
 import kr.co.board.exception.CustomException;
-import kr.co.board.exception.ErrorCode;
+import kr.co.board.model.enums.ErrorCode;
 import kr.co.board.model.Comment;
 import kr.co.board.model.Member;
 import kr.co.board.model.Post;

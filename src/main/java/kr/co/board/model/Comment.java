@@ -28,7 +28,6 @@ public class Comment {
     @CreationTimestamp
     private Instant createdAt;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     @JsonIgnore

@@ -17,7 +17,7 @@
             </div>
             <div class="mt-3" th:if="${post.id != null && post.getFile() != null}">
                 <div class="file-item" th:attrappend="data-id=${post.getFile().getId()}">
-                    <a class="primary-text" th:href="@{/files/{id}(id = ${post.getFile().getId()})}"
+                    <a class="primary-text" th:href="@{upload}"
                        th:text="${post.getFile()?.getOriginalName()}"></a>
                     <span class="file-delete-btn text-danger fw-bold" th:attrappend="data-id=${post.getFile().getId()}">
                     X
