@@ -2,15 +2,15 @@ package kr.co.board.controller;
 
 import kr.co.board.exception.CustomException;
 import kr.co.board.model.enums.ErrorCode;
-import kr.co.board.model.Comment;
 import kr.co.board.model.Member;
 import kr.co.board.model.Post;
+import kr.co.board.model.helper.Pagination;
 import kr.co.board.model.vo.CommentVo;
 import kr.co.board.model.vo.PostVo;
 import kr.co.board.service.CommentService;
 import kr.co.board.service.FileService;
 import kr.co.board.service.PostService;
-import kr.co.board.util.CurrentUser;
+import kr.co.board.model.helper.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,9 +24,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Controller
 @RequiredArgsConstructor
@@ -41,15 +38,10 @@ public class PostController {
 
         Page<Post> postPage = postService.findAll(pageable);
 
-        model.addAttribute("postPage", postPage);
+        String url = "/posts";
+        Pagination pagination = new Pagination(postPage, pageable, url);
+        model.addAttribute("pagination", pagination);
 
-        int totalPages = postPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
         return "app/posts/index";
     }
 

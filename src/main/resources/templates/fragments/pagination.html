@@ -1,31 +1,36 @@
-<nav th:fragment="pagination"
-     th:with="pageNumber = ${postPage.pageable.pageNumber},
-                pageSize = ${postPage.pageable.pageSize},
-                totalPages = ${postPage.totalPages},
-                startPage = ${T(Math).floor(pageNumber / pageSize) * pageSize + 1},
-                tempEndPage = ${startPage + pageSize - 1},
-                endPage = (${tempEndPage > totalPages ? totalPages : tempEndPage})"
-     th:if="${postPage != null}" class="d-flex justify-content-center" aria-label="Page navigation">
-
-    <ul class="pagination">
-        <li th:classappend="${postPage.first} ? 'disabled'" class="page-item">
-            <a class="page-link" th:href="${postPage.first} ? '#' : @{/posts(page=${pageNumber}-1)}" aria-label="Previous">
+<nav xmlns:th="http://www.thymeleaf.org" th:fragment="pagination"
+     th:with="begin = ${pagination.begin},
+                end = ${pagination.end},
+                url = ${pagination.url},
+                query = ${pagination.query},
+                current = ${pagination.current},
+                totalPages = ${pagination.page.totalPages}"
+     aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        <li class="page-item" th:if="${current != begin}">
+            <a class="page-link" href="#" th:href="@{{pageUrl}(pageUrl=${url}, page=0)}+'&'+${query}" aria-label="Previous">
+                <span aria-hidden="true">&lt;&lt;</span>
+            </a>
+        </li>
+        <li th:if="${current <= 5 && current > 1}">
+            <a class="page-link" href="#" th:href="@{{pageUrl}(pageUrl=${url}, page=${current - 2})}+'&'+${query}">
                 <span aria-hidden="true">&lt;</span>
-                <span class="sr-only"></span>
+            </a>
+        </li>
+        <li class="page-item" th:each="i : ${#numbers.sequence(begin, end)}" th:classappend="${i == current} ? 'active'">
+            <a th:if="${i > 0}" class="page-link" href="#" th:href="@{{pageUrl}(pageUrl=${url}, page=${i - 1})}+'&'+${query}">
+                <span th:text="${i}"></span>
+            </a>
+        </li>
+        <li th:if="${(current >= (totalPages - 5)) && (current < totalPages)}">
+        <a class="page-link" href="#" th:href="@{{pageUrl}(pageUrl=${url}, page=${current})}+'&'+${query}">
+                <span aria-hidden="true">&gt;</span>
             </a>
         </li>
 
-
-        <li class="page-item" th:if="${postPage.totalPages > 0}" th:each="pageNumber : ${pageNumbers}">
-            <a class="page-link" th:href="@{/posts(page=${pageNumber}-1)}"
-               th:text="${pageNumber}"
-               th:classappend="${pageNumber==postPage.number + 1} ? active"></a>
-        </li>
-
-        <li th:classappend="${postPage.last} ? 'disabled'" class="page-item">
-            <a class="page-link" th:href="${postPage.last} ? '#' : @{/posts(page=${pageNumber}+1)}" aria-label="Next">
-                <span aria-hidden="true">&gt;</span>
-                <span class="sr-only"></span>
+        <li class="page-item" th:if="${current != end}">
+            <a class="page-link" href="#" th:href="@{{pageUrl}(pageUrl=${url}, page=${totalPages - 1})}+'&'+${query}">
+                <span aria-hidden="true">&gt;&gt;</span>
             </a>
         </li>
     </ul>

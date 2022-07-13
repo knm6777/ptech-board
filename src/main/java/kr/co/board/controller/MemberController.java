@@ -6,7 +6,7 @@ import kr.co.board.model.vo.MemberVo;
 import kr.co.board.service.CommentService;
 import kr.co.board.service.MemberService;
 import kr.co.board.service.PostService;
-import kr.co.board.util.CurrentUser;
+import kr.co.board.model.helper.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -65,7 +65,7 @@ public class MemberController {
 
     @GetMapping("/mypage")
     public String indexMypage(@CurrentUser Member member, Model model, @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<Post> postPage = postService.findAllByMemberId(member.getId(), pageable);
+        Page<Post> postPage = postService.findAllByMember(member, pageable);
 
         model.addAttribute("comments", commentService.findAllByMember(member));
         model.addAttribute("posts", postPage);

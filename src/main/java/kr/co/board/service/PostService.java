@@ -20,8 +20,8 @@ public class PostService {
     public Page<Post> findAll(Pageable pageable) {
         return postRepository.findAll(pageable);
     }
-    public Page<Post> findAllByMemberId(Long memberId, Pageable pageable) {
-        return postRepository.findAllByMemberId(memberId, pageable);
+    public Page<Post> findAllByMember(Member member, Pageable pageable) {
+        return postRepository.findAllByMember(member, pageable);
     }
 
     public Post findById(Long id) {

@@ -1,4 +1,4 @@
-package kr.co.board.util;
+package kr.co.board.model.helper;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 

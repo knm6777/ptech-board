@@ -25,11 +25,10 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Long> {
 
     List<Post> findAll();
 
-    @Query(value ="SELECT p FROM Post p " +
-            "LEFT JOIN FETCH p.comments c \n" +
-            "LEFT JOIN FETCH p.file f \n" +
-            "WHERE  p.id = :id\n")
-    Page<Post> findAllByMemberId(Long memberId, Pageable pageable);
+//    @Query(value ="SELECT p FROM Post p " +
+//            "LEFT JOIN FETCH p.comments c \n" +
+//            "WHERE  p.member.id = :memberId\n")
+    Page<Post> findAllByMember(Member member, Pageable pageable);
 
     @Query(value = "SELECT * FROM posts WHERE id < :id ORDER BY id DESC limit 1", nativeQuery = true)
     Post findPrePost(Long id);

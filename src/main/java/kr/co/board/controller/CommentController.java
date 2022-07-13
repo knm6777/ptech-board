@@ -4,17 +4,15 @@ import kr.co.board.model.Comment;
 import kr.co.board.model.Member;
 import kr.co.board.model.Post;
 import kr.co.board.model.vo.CommentVo;
-import kr.co.board.model.vo.PostVo;
 import kr.co.board.service.CommentService;
 import kr.co.board.service.PostService;
-import kr.co.board.util.CurrentUser;
+import kr.co.board.model.helper.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
 @Controller
