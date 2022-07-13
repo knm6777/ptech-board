@@ -13,10 +13,22 @@ import java.util.Optional;
 
 @Repository
 public interface PostRepository extends PagingAndSortingRepository<Post, Long> {
+
+
     Optional<Post> findById(Long id);
+
+    @Query(value ="SELECT p FROM Post p " +
+            "LEFT JOIN FETCH p.comments c \n" +
+            "LEFT JOIN FETCH p.file f \n" +
+            "WHERE  p.id = :id\n")
+    Post findByIdJoin(Long id);
 
     List<Post> findAll();
 
+    @Query(value ="SELECT p FROM Post p " +
+            "LEFT JOIN FETCH p.comments c \n" +
+            "LEFT JOIN FETCH p.file f \n" +
+            "WHERE  p.id = :id\n")
     Page<Post> findAllByMemberId(Long memberId, Pageable pageable);
 
     @Query(value = "SELECT * FROM posts WHERE id < :id ORDER BY id DESC limit 1", nativeQuery = true)

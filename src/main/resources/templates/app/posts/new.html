@@ -4,10 +4,11 @@
 <div layout:fragment="content" class="container-fluid">
     <div class="container my-3 p-4 bg-white rounded-3">
         <form id="post-form" th:object="${post}" th:action="@{/posts}" th:method="${post.id == null ? 'post' : 'put'}"
-               enctype="multipart/form-data">
+              enctype="multipart/form-data">
             <div th:replace="fragments/form_errors :: formErrorsFragment"></div>
             <input type="hidden" name="id" th:field="*{id}">
-            <input type="text" id="title" name="title" class="form-control mb-3" th:field="*{title}" placeholder="제목을 입력하세요.">
+            <input type="text" id="title" name="title" class="form-control mb-3" th:field="*{title}"
+                   placeholder="제목을 입력하세요.">
             <textarea id="summernote" name="content" class="mt-3" th:field="*{content}"></textarea>
             <hr>
             <!-- 파일 -->
@@ -16,13 +17,13 @@
                 <input type="file" class="form-control" id="file-input" name="file">
             </div>
             <div class="mt-3" th:if="${post.id != null && post.getFile() != null}">
-                <div class="file-item" th:attrappend="data-id=${post.getFile().getId()}">
-                    <a class="primary-text" th:href="@{upload}"
-                       th:text="${post.getFile()?.getOriginalName()}"></a>
-                    <span class="file-delete-btn text-danger fw-bold" th:attrappend="data-id=${post.getFile().getId()}">
-                    X
-                    </span>
-                </div>
+                <!--                <div class="file-item" th:attrappend="data-id=${post.getFile().getId()}">-->
+                <!--                    <a class="primary-text" th:href="@{upload/{id}(id = ${post.getFile().getId()})}"-->
+                <!--                       th:text="${post.getFile()?.getOriginalName()}"></a>-->
+                <!--                    <span class="file-delete-btn text-danger fw-bold" th:attrappend="data-id=${post.getFile().getId()}">-->
+                <!--                    X-->
+                <!--                    </span>-->
+                <!--                </div>-->
                 <input type="hidden" name="deleteFileId" id="delete-file-ids-input">
             </div>
             <!-- 파일 끝 -->
@@ -40,11 +41,11 @@
         $('#summernote').summernote({
             placeholder: '내용을 입력하세요',
             lineHeights: ['0.2', '0.3', '0.4', '0.5', '0.6', '0.8', '1.0', '1.2', '1.4', '1.5', '2.0', '3.0'],
-            fontNames: ['Arial', 'Comic Sans MS',  'sans-serif', 'Noto Sans CJK Kr', '나눔바른고딕', '나눔고딕', '나눔손글씨체', '한돋움체', '나눔명조', '나눔명조에코', '마루부리'],
-            fontNamesIgnoreCheck : ['Arial', 'Comic Sans MS',  'sans-serif', 'Noto Sans CJK Kr', '나눔바른고딕', '나눔고딕', '나눔손글씨체', '한돋움체', '나눔명조', '나눔명조에코', '마루부리'],
+            fontNames: ['Arial', 'Comic Sans MS', 'sans-serif', 'Noto Sans CJK Kr', '나눔바른고딕', '나눔고딕', '나눔손글씨체', '한돋움체', '나눔명조', '나눔명조에코', '마루부리'],
+            fontNamesIgnoreCheck: ['Arial', 'Comic Sans MS', 'sans-serif', 'Noto Sans CJK Kr', '나눔바른고딕', '나눔고딕', '나눔손글씨체', '한돋움체', '나눔명조', '나눔명조에코', '마루부리'],
             toolbar: [
                 ['font', ['fontname', 'fontsize', 'fontsizeunit']],
-                ['height',['height']],
+                ['height', ['height']],
                 ['style', ['style']],
                 ['font', ['bold', 'underline', 'clear']],
                 ['color', ['color']],
@@ -54,7 +55,7 @@
                 ['view', ['fullscreen', 'codeview', 'help']],
             ],
             callbacks: {
-                onImageUpload : function(files) {
+                onImageUpload: function (files) {
                     self.sendImg(files, $(this));
                 }
             },
@@ -66,13 +67,13 @@
             var header = $("meta[name='_csrf_header']").attr("content");
             var data = new FormData();
             var self = this;
-            for (var i=0; i<files.length; i++) {
+            for (var i = 0; i < files.length; i++) {
                 data.append("multipartFiles", files[i]);
             }
             console.log(data);
             $.ajax({
                 data: data,
-                beforeSend : function(xhr) {
+                beforeSend: function (xhr) {
                     xhr.setRequestHeader(header, token);
                 },
                 type: "POST",
@@ -81,12 +82,12 @@
                 cache: false,
                 contentType: false,
                 processData: false,
-                success: function(data) {
-                    for (var i=0; i<data.length; i++) {
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
                         editor.summernote('insertImage', '/upload' + data[i].relativePath);
                     }
                 },
-                error: function(jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR, textStatus, errorThrown) {
                     console.log(errorThrown)
                 }
             });

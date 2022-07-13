@@ -83,7 +83,7 @@ public class MemberController {
     }
     
     @PostMapping("")
-    public String saveMember(@Validated @ModelAttribute MemberVo memberVo, BindingResult bindingResult) {
+    public String save(@Validated @ModelAttribute MemberVo memberVo, BindingResult bindingResult) {
         // 양식 오류
         if (bindingResult.hasErrors()) {
             return "app/users/new";

@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,10 +18,10 @@ import java.util.Objects;
 public class PostVo {
     private Long id;
 
-    @NotEmpty(message = "제목을 적으세요.")
+    @NotBlank(message = "제목을 적으세요.")
     private String title;
 
-    @NotEmpty(message = "내용을 적으세요.")
+    @NotBlank(message = "내용을 적으세요.")
     private String content;
     private MultipartFile file;
 

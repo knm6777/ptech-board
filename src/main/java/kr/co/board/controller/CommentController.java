@@ -25,7 +25,7 @@ public class CommentController {
     private final PostService postService;
 
     @PostMapping("")
-    public String saveComment(@CurrentUser Member currentMember, Long postId, @Validated CommentVo vo, BindingResult bindingResult) {
+    public String save(@CurrentUser Member currentMember, Long postId, @Validated CommentVo vo, BindingResult bindingResult) {
         Post post = postService.findById(postId);
 
         if (bindingResult.hasErrors()) {
@@ -41,7 +41,7 @@ public class CommentController {
     }
 
     @PutMapping("")
-    public String updateComment(Long id, Long postId, @ModelAttribute(name = "updatecomment") CommentVo vo, @CurrentUser Member currentMember, BindingResult bindingResult) {
+    public String update(Long id, Long postId, @ModelAttribute(name = "updatecomment") CommentVo vo, @CurrentUser Member currentMember, BindingResult bindingResult) {
         Comment commentForUpdate = commentService.findById(id);
 
         if (bindingResult.hasErrors()) {

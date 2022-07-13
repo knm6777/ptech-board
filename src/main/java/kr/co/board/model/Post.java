@@ -73,7 +73,7 @@ public class Post {
         this.file = null;
     }
 
-    public boolean isSameMember(Member member) {
+    public boolean isWriter(Member member) {
         return this.member.getId().equals(member.getId());
     }
 }

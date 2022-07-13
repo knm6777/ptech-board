@@ -79,6 +79,17 @@ public class FileService {
         return file;
     }
 
+    private List<File> createFiles(List<MultipartFile> multipartFileList) {
+        List<File> files = new ArrayList<>();
+        for (int i=0; i < multipartFileList.size(); i++) {
+            this.sequence = i;
+            File file = createFile(multipartFileList.get(i));
+            files.add(file);
+        }
+        this.sequence = 0;
+        return files;
+    }
+
     public File findById(Long id) {
         Optional<File> optionalFile = fileRepository.findById(id);
         return optionalFile.orElse(null);

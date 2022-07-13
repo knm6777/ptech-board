@@ -54,7 +54,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public String showPost(@CurrentUser Member currentMember, @PathVariable Long id, Model model) {
+    public String show(@CurrentUser Member currentMember, @PathVariable Long id, Model model) {
         Post post = postService.findById(id);
 
         if(post == null) {
@@ -69,9 +69,6 @@ public class PostController {
         model.addAttribute("nextPost", nextPost);
         model.addAttribute("prePost", prePost);
         model.addAttribute("currentMember", currentMember);
-
-        List<Comment> commentList = commentService.findAllByPostId(id);
-        model.addAttribute("commentList", commentList);
 
         CommentVo comment = new CommentVo();
         model.addAttribute("comment", comment);
@@ -88,7 +85,7 @@ public class PostController {
     }
 
     @PostMapping("")
-    public String savePost(@CurrentUser Member currentMember, @Validated @ModelAttribute(name = "post") PostVo postVo, BindingResult bindingResult) throws IOException {
+    public String save(@CurrentUser Member currentMember, @Validated @ModelAttribute(name = "post") PostVo postVo, BindingResult bindingResult) throws IOException {
         if (bindingResult.hasErrors()) {
             return "app/posts/new";
         }
@@ -108,10 +105,10 @@ public class PostController {
     }
 
     @GetMapping("/{id}/edit")
-    public String updatePost(@PathVariable("id") Long id, Model model, @CurrentUser Member currentMember, RedirectAttributes redirAttrs) {
+    public String update(@PathVariable("id") Long id, Model model, @CurrentUser Member currentMember, RedirectAttributes redirAttrs) {
         Post post = postService.findById(id);
 
-        if (!post.isSameMember(currentMember)) {
+        if (!post.isWriter(currentMember)) {
             redirAttrs.addFlashAttribute("postError", "수정 권한이 없습니다.");
             return "redirect:/posts/" + post.getId();
         }
@@ -121,15 +118,16 @@ public class PostController {
     }
 
     @PutMapping("")
-    public String updatePost(Long id, @ModelAttribute PostVo vo, @CurrentUser Member currentMember,
-                             RedirectAttributes redirAttrs, BindingResult bindingResult) throws Exception {
+    public String update(@CurrentUser Member currentMember, Long id, @Validated @ModelAttribute(name="post") PostVo vo,
+                             BindingResult bindingResult, RedirectAttributes redirAttrs) throws Exception {
         Post postForUpdate = postService.findById(id);
 
         if (bindingResult.hasErrors()) {
-            return "redirect:/posts/" + postForUpdate.getId();
+            return "app/posts/new";
         }
-        if (!postForUpdate.isSameMember(currentMember)) {
+        if (!postForUpdate.isWriter(currentMember)) {
             redirAttrs.addFlashAttribute("postError", "수정 권한이 없습니다.");
+            return "redirect:/posts/" + postForUpdate.getId();
         }
 
         postForUpdate.update(vo);
@@ -142,7 +140,7 @@ public class PostController {
     @DeleteMapping("")
     public String delete(Long id, @CurrentUser Member currentMember, RedirectAttributes redirAttrs) {
         Post post = postService.findById(id);
-        if (!post.isSameMember(currentMember)) {
+        if (!post.isWriter(currentMember)) {
             redirAttrs.addFlashAttribute("postError", "삭제 권한이 없습니다.");
             return "redirect:/posts/" + post.getId();
         } else {

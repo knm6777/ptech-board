@@ -25,7 +25,8 @@ public class PostService {
     }
 
     public Post findById(Long id) {
-        return postRepository.findById(id).orElse(null);
+//        return postRepository.findById(id).orElse(null);
+        return postRepository.findByIdJoin(id);
     }
 
     @Transactional
