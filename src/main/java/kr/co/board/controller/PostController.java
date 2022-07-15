@@ -1,6 +1,7 @@
 package kr.co.board.controller;
 
 import kr.co.board.exception.CustomException;
+import kr.co.board.model.Comment;
 import kr.co.board.model.enums.ErrorCode;
 import kr.co.board.model.Member;
 import kr.co.board.model.Post;
@@ -13,10 +14,12 @@ import kr.co.board.service.PostService;
 import kr.co.board.model.helper.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -24,13 +27,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/posts")
 public class PostController {
     private final PostService postService;
-    private final CommentService commentService;
     private final FileService fileService;
 
     @GetMapping("")
@@ -46,14 +49,27 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public String show(@CurrentUser Member currentMember, @PathVariable Long id, Model model) {
+    public String show(@CurrentUser Member currentMember, @PathVariable Long id, Model model, @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         Post post = postService.findById(id);
 
         if(post == null) {
             throw new CustomException(ErrorCode.POSTS_NOT_FOUND);
         }
 
-        postService.updateHit(id);
+        // 본인이 아닐 시 조회수 올라감
+        if(!post.isWriter(currentMember)) {
+            postService.updateHit(id);
+        }
+
+        List<Comment> comments = post.getComments();
+
+//        댓글 페이징
+        final int start = (int)pageable.getOffset();
+        final int end = Math.min((start + pageable.getPageSize()), comments.size());
+        final Page<Comment> commentPage = new PageImpl<>(comments.subList(start, end), pageable, comments.size());
+        String url = "/posts/"+id;
+        Pagination pagination = new Pagination(commentPage, pageable, url);
+
         Post prePost = postService.findPrePost(id);
         Post nextPost = postService.findNextPost(id);
 
@@ -61,6 +77,7 @@ public class PostController {
         model.addAttribute("nextPost", nextPost);
         model.addAttribute("prePost", prePost);
         model.addAttribute("currentMember", currentMember);
+        model.addAttribute("pagination", pagination);
 
         CommentVo comment = new CommentVo();
         model.addAttribute("comment", comment);
@@ -76,6 +93,7 @@ public class PostController {
         return "app/posts/new";
     }
 
+    @Transactional
     @PostMapping("")
     public String save(@CurrentUser Member currentMember, @Validated @ModelAttribute(name = "post") PostVo postVo, BindingResult bindingResult) throws IOException {
         if (bindingResult.hasErrors()) {

@@ -48,6 +48,7 @@ public class CommentController {
 
         if (commentForUpdate.getMemberId() != currentMember.getId()) {
             log.error("Error ====== 댓글 수정 권한 없음");
+            return "redirect:/posts/" + postId;
         }
 
         commentForUpdate.update(vo);

@@ -2,6 +2,7 @@ package kr.co.board.controller;
 
 import kr.co.board.model.Member;
 import kr.co.board.model.Post;
+import kr.co.board.model.helper.Pagination;
 import kr.co.board.model.vo.MemberVo;
 import kr.co.board.service.CommentService;
 import kr.co.board.service.MemberService;
@@ -67,17 +68,12 @@ public class MemberController {
     public String indexMypage(@CurrentUser Member member, Model model, @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Post> postPage = postService.findAllByMember(member, pageable);
 
-        model.addAttribute("comments", commentService.findAllByMember(member));
-        model.addAttribute("posts", postPage);
-        model.addAttribute("member", member);
+        String url = "/mypage";
+        Pagination pagination = new Pagination(postPage, pageable, url);
 
-        int totalPages = postPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
+        model.addAttribute("comments", commentService.findAllByMember(member));
+        model.addAttribute("pagination", pagination);
+        model.addAttribute("member", member);
 
         return "app/users/mypage";
     }

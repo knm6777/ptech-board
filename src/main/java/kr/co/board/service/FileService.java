@@ -130,6 +130,4 @@ public class FileService {
         String path = this.uploadPath + fileToDelete.getRelativePath();
         FileUtils.deleteQuietly(FileUtils.getFile(path));
     }
-
-
 }

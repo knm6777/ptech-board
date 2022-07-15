@@ -31,10 +31,6 @@ public class CommentService {
         return deletedComment;
     }
 
-    public List<Comment> findAllByPostId(Long postId) {
-        return commentRepository.findAllByPostId(postId);
-    }
-
     public List<Comment> findAllByMember(Member member) {
         return commentRepository.findAllByMember(member);
     }
