@@ -34,12 +34,6 @@
                                class="form-control"
                                th:id="selfIntroduction">
                     </div>
-                    <h3>비밀번호 변경</h3>
-                    <div class="input-group input-group-static mb-4">
-                        <label style="font-weight: bold" th:for="password">변경할 비밀번호 입력</label>
-                        <input type="password" th:id="password" th:name="password"
-                               placeholder="변경할 비밀번호를 입력하세요." class="form-control">
-                    </div>
                 </form>
                 <button id="memberUpdate" class="btn btn-info" value="회원 정보 수정"
                         th:onclick="memberUpdate()">회원 정보 수정
@@ -85,49 +79,42 @@
                 });
 
             }
+        }
 
-            function memberUpdate() {
-                var token = $("meta[name='_csrf']").attr("content");
-                var header = $("meta[name='_csrf_header']").attr("content");
-                const data = {
-                    id: $('#userId').val(),
-                    selfIntroduction: $('#selfIntroduction').val(),
-                    password: $('#password').val()
-                };
+        function memberUpdate() {
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+            const data = {
+                id: $('#userId').val(),
+                selfIntroduction: $('#selfIntroduction').val(),
+            };
 
-                // 공백 및 빈 문자열 체크
-                if (!data.password || data.password.trim() === "") {
-                    alert("공백 또는 입력하지 않은 부분이 있습니다.");
-                    return false;
-                }
+            const confirmCheck = confirm("수정하시겠습니까?");
 
-                const confirmCheck = confirm("수정하시겠습니까?");
-
-                if (confirmCheck == true) {
-                    $.ajax({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        type: 'PUT',
-                        url: '/member',
-                        contentType: 'application/json; charset=utf-8',
-                        data: JSON.stringify(data),
-                        beforeSend: function (xhr) {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
-                            xhr.setRequestHeader(header, token);
-                        }
-                    }).done(function (result) {
-                        console.log(result);
-                        if (result) {
-                            alert("회원 탈퇴가 완료되었습니다.");
-                            window.location.href = "/";
-                        } else {
-                            alert("회원 탈퇴 중 오류가 발생했습니다.")
-                            $('#password').focus();
-                        }
-                    }).fail(function (error) {
-                        alert(JSON.stringify(error));
-                    });
-                }
+            if (confirmCheck == true) {
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    type: 'PUT',
+                    url: '/member',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(data),
+                    beforeSend: function (xhr) {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+                        xhr.setRequestHeader(header, token);
+                    }
+                }).done(function (result) {
+                    console.log(result);
+                    if (result) {
+                        alert("회원 정보 수정이 완료되었습니다.");
+                        window.location.href = "/";
+                    } else {
+                        alert("회원 정보 수정 중 오류가 발생했습니다.")
+                        $('#password').focus();
+                    }
+                }).fail(function (error) {
+                    alert(JSON.stringify(error));
+                });
             }
         }
     </script>

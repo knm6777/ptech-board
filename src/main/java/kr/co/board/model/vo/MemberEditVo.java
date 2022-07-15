@@ -12,8 +12,5 @@ public class MemberEditVo {
     //이미지도 추가할 것
     private Long id;
 
-    private String password;
-
     private String selfIntroduction;
 }
-

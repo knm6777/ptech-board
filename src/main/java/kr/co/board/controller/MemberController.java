@@ -17,9 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +24,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -83,17 +79,24 @@ public class MemberController {
         return "app/users/mypage";
     }
 
-    @GetMapping("/check")
-    public String goToCheckPage() {
-        return "app/users/checkPassword";
+    @GetMapping("/updatepwd")
+    public String updatePwd() {
+        return "app/users/updatepwd";
     }
 
-    @GetMapping("/checkpwd")
+    @PostMapping("/updatepwd")
     @ResponseBody
-    public boolean checkPassword(@CurrentUser Member member, @RequestParam String checkPassword) {
+    public boolean updatePassword(@CurrentUser Member member, @RequestParam String curPassword, @RequestParam String changePassword) {
         log.info("checkPwd 진입");
+        if(memberService.checkPassword(member.getId(), curPassword)) {
+            String password = memberService.passwordEncoding(changePassword);
+            member.setPassword(password);
+            memberService.update(member);
 
-        return memberService.checkPassword(member.getId(), checkPassword);
+            return true;
+        }else {
+            return false;
+        }
     }
 
     @GetMapping("/update")
@@ -109,9 +112,6 @@ public class MemberController {
 
         log.info("MemberController 진입");
         Member member = memberService.findById(memberEditVo.getId());
-
-        String password = memberService.passwordEncoding(memberEditVo.getPassword());
-        memberEditVo.setPassword(password);
         // 회원 정보 수정
         member.update(memberEditVo);
         memberService.update(member);

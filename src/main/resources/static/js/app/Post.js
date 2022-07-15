@@ -1,5 +1,5 @@
 class Post {
-    constructor(postId) {
+    constructor() {
         this.deleteFileIds = [];
         this.deleteFileIdsInput = document.getElementById("delete-file-ids-input");
         this.fileDeleteBtns = document.getElementsByClassName("file-delete-btn");

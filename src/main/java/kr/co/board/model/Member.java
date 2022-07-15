@@ -52,6 +52,5 @@ public class Member {
 
     public void update(MemberEditVo vo) {
         this.selfIntroduction = vo.getSelfIntroduction();
-        this.password = vo.getPassword();
     }
 }
