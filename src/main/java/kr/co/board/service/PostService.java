@@ -49,6 +49,11 @@ public class PostService {
     }
 
     @Transactional
+    public void deleteByMember(Member member) {
+        postRepository.deleteAllByMember(member);
+    }
+
+    @Transactional
     public void updateHit(Long id) {
         postRepository.updateHit(id);
     }

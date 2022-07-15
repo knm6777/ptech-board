@@ -67,6 +67,10 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findById(id).orElse(null);
     }
 
+    public void deleteById(Long id) {
+        memberRepository.deleteById(id);
+    }
+
     @PostConstruct
     public void initialize() {
         Optional<Member> admin = memberRepository.findByEmail("admin@admin.com");

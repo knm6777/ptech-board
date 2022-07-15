@@ -27,6 +27,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -118,7 +119,6 @@ public class MemberController {
         return true;
     }
 
-
     @PostMapping("")
     public String save(@Validated @ModelAttribute MemberVo memberVo, BindingResult bindingResult) {
         // 양식 오류
@@ -145,5 +145,17 @@ public class MemberController {
             return "app/users/new";
         }
         return "redirect:/";
+    }
+
+    @PostMapping("/delete")
+    @ResponseBody
+    public boolean delete(@CurrentUser Member member, HttpSession session) {
+        postService.deleteByMember(member);
+        commentService.deleteByMember(member);
+        memberService.deleteById(member.getId());
+
+        session.invalidate();
+
+        return true;
     }
 }

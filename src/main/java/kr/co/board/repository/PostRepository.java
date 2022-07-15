@@ -39,4 +39,6 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Long> {
     @Modifying
     @Query("UPDATE Post p SET p.hit = p.hit + 1 WHERE p.id = :id")
     void updateHit(Long id);
+
+    void deleteAllByMember(Member member);
 }

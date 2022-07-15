@@ -31,6 +31,11 @@ public class CommentService {
         return deletedComment;
     }
 
+    @Transactional
+    public void deleteByMember(Member member) {
+        commentRepository.deleteAllByMember(member);
+    }
+
     public List<Comment> findAllByMember(Member member) {
         return commentRepository.findAllByMember(member);
     }

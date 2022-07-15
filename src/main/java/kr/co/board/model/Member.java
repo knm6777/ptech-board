@@ -37,7 +37,7 @@ public class Member {
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private Set<Role> roles = new HashSet<>();
 
     @Builder
