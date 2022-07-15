@@ -48,6 +48,25 @@ public class MemberService implements UserDetailsService {
         roleRepository.save(role);
     }
 
+    public String passwordEncoding(String password) {
+        return passwordEncoder.encode(password);
+    }
+
+    public void update(Member member) {
+        memberRepository.save(member);
+    }
+
+    public boolean checkPassword(Long id, String password) {
+        Member member = memberRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
+        String realPassword = member.getPassword();
+        return passwordEncoder.matches(password, realPassword);
+    }
+
+    public Member findById(Long id) {
+        return memberRepository.findById(id).orElse(null);
+    }
+
     @PostConstruct
     public void initialize() {
         Optional<Member> admin = memberRepository.findByEmail("admin@admin.com");

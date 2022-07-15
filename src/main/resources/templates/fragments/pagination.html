@@ -4,9 +4,10 @@
                 url = ${pagination.url},
                 query = ${pagination.query},
                 current = ${pagination.current},
-                totalPages = ${pagination.page.totalPages}"
+                totalPages = ${pagination.page.totalPages},
+                contentSize = ${pagination.page.getContent().size()}"
      aria-label="Page navigation">
-    <ul class="pagination justify-content-center">
+    <ul class="pagination justify-content-center" th:if="${contentSize != 0}">
         <li class="page-item" th:if="${current != begin}">
             <a class="page-link" href="#" th:href="@{{pageUrl}(pageUrl=${url}, page=0)}+'&'+${query}" aria-label="Previous">
                 <span aria-hidden="true">&lt;&lt;</span>
@@ -28,7 +29,7 @@
             </a>
         </li>
 
-        <li class="page-item" th:if="${current != end}">
+        <li class="page-item" th:if="${current != end && current != 0}">
             <a class="page-link" href="#" th:href="@{{pageUrl}(pageUrl=${url}, page=${totalPages - 1})}+'&'+${query}">
                 <span aria-hidden="true">&gt;&gt;</span>
             </a>

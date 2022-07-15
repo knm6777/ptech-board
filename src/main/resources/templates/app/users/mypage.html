@@ -50,7 +50,7 @@
                                 <td th:text="${post.getHit()}"></td>
                             </tr>
 
-                            <tr th:if="${pagination == null}">
+                            <tr th:if="${pagination.page.getContent().size() == 0}">
                                 <td colspan="5">조회된 결과가 없습니다.</td>
                             </tr>
                             </tbody>
@@ -76,20 +76,45 @@
                                 <td th:text="${comment.getContent()}"></td>
                                 <td th:text="${#temporals.format( comment.createdAt, 'yyyy-MM-dd HH:mm:ss' )}"></td>
                             </tr>
-                            <tr th:if="${comments == null}">
+                            <tr th:if="${comments.size() == 0}">
                                 <td colspan="5">조회된 결과가 없습니다.</td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
                     <div class="tab-pane fade " id="myinfo">
-                        <div class="d-flex justify-content-start"
-                             th:text="${'사용자 id :' +member.getUsername()}"></div>
-                        <div class="d-flex justify-content-start"
-                             th:text="${'사용자 email :' +member.getEmail()}"></div>
-                        <div class="d-flex justify-content-start"
-                             th:text="${'계정 생성 날짜 :' + #temporals.format( member.createdAt, 'yyyy-MM-dd' )}"></div>
-                        <a href="#" class="justify-content-start btn btn-info" onclick="return alert('준비중입니다');">
+                        <div class="my-md-3">
+                            <img th:src="@{/icons/bootstrap-icons-1.8.3/paperclip.svg}"
+                                 width="200px">
+                        </div>
+                        <div class="mx-md-auto">
+                            <table class="table">
+                                <thead class="disabled">
+                                <tr>
+                                    <th scope="col" style="width: 50%"></th>
+                                    <th scope="col" style="width: 50%"></th>
+                                </tr>
+                                </thead>
+                                <tr>
+                                    <td>사용자 아이디</td>
+                                    <td th:text="${member.getUsername()}"></td>
+                                </tr>
+                                <tr>
+                                    <td>사용자 이메일</td>
+                                    <td th:text="${member.getEmail()}"></td>
+                                </tr>
+                                <tr>
+                                    <td>한 줄 소개</td>
+                                    <td th:if="${member.getSelfIntroduction() != null }" th:text="${member.getSelfIntroduction()}"></td>
+                                    <td th:unless="${member.getSelfIntroduction() != null }">자기소개가 없습니다.</td>
+                                </tr>
+                                <tr>
+                                    <td>계정 생성 날짜</td>
+                                    <td th:text="${'계정 생성 날짜 :' + #temporals.format( member.createdAt, 'yyyy-MM-dd' )}"></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <a th:href="@{/member/check}" class="justify-content-start btn btn-info">
                             내 정보 수정</a>
                     </div>
                 </div>

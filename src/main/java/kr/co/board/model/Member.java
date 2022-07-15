@@ -1,5 +1,7 @@
 package kr.co.board.model;
 
+import kr.co.board.model.vo.MemberEditVo;
+import kr.co.board.model.vo.PostVo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +31,8 @@ public class Member {
     @Column(nullable=false, unique=true)
     private String email;
 
+    private String selfIntroduction;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
@@ -44,5 +48,10 @@ public class Member {
         this.username = username;
         this.password = password;
         this.createdAt = LocalDateTime.of(localDate, LocalTime.MIDNIGHT).atZone(ZoneId.systemDefault()).toInstant();
+    }
+
+    public void update(MemberEditVo vo) {
+        this.selfIntroduction = vo.getSelfIntroduction();
+        this.password = vo.getPassword();
     }
 }

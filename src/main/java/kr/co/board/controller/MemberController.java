@@ -3,6 +3,7 @@ package kr.co.board.controller;
 import kr.co.board.model.Member;
 import kr.co.board.model.Post;
 import kr.co.board.model.helper.Pagination;
+import kr.co.board.model.vo.MemberEditVo;
 import kr.co.board.model.vo.MemberVo;
 import kr.co.board.service.CommentService;
 import kr.co.board.service.MemberService;
@@ -15,19 +16,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import org.springframework.security.core.AuthenticationException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Slf4j
 @Controller
@@ -39,6 +41,8 @@ public class MemberController {
     private final MemberService memberService;
     private final CommentService commentService;
     private final PostService postService;
+
+    private final AuthenticationManager authenticationManager;
 
     @GetMapping("/login")
     public String login(HttpServletRequest request, Model model) {
@@ -77,7 +81,44 @@ public class MemberController {
 
         return "app/users/mypage";
     }
-    
+
+    @GetMapping("/check")
+    public String goToCheckPage() {
+        return "app/users/checkPassword";
+    }
+
+    @GetMapping("/checkpwd")
+    @ResponseBody
+    public boolean checkPassword(@CurrentUser Member member, @RequestParam String checkPassword) {
+        log.info("checkPwd 진입");
+
+        return memberService.checkPassword(member.getId(), checkPassword);
+    }
+
+    @GetMapping("/update")
+    public String update(@CurrentUser Member member, Model model) {
+        model.addAttribute("member", member);
+
+        return "app/users/update";
+    }
+
+    @PutMapping("")
+    @ResponseBody
+    public boolean update(@RequestBody MemberEditVo memberEditVo) {
+
+        log.info("MemberController 진입");
+        Member member = memberService.findById(memberEditVo.getId());
+
+        String password = memberService.passwordEncoding(memberEditVo.getPassword());
+        memberEditVo.setPassword(password);
+        // 회원 정보 수정
+        member.update(memberEditVo);
+        memberService.update(member);
+
+        return true;
+    }
+
+
     @PostMapping("")
     public String save(@Validated @ModelAttribute MemberVo memberVo, BindingResult bindingResult) {
         // 양식 오류
@@ -94,11 +135,11 @@ public class MemberController {
         // db 오류
         try {
             memberService.save(memberVo);
-        }catch(DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
             return "app/users/new";
-        }catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             bindingResult.reject("signupFailed", e.getMessage());
             return "app/users/new";

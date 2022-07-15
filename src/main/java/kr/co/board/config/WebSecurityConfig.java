@@ -4,6 +4,7 @@ import kr.co.board.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -29,7 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .csrf()
                 .and()
                     .authorizeRequests()
-                    .antMatchers("/posts/**", "/comments/**").authenticated()
+                    .antMatchers("/posts/**", "/comments/**", "/member/check/**").authenticated()
                     .anyRequest()
                     .permitAll()
                 .and()
@@ -55,6 +56,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
         jdbcTokenRepository.setDataSource(dataSource);
         return jdbcTokenRepository;
+    }
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
 }
