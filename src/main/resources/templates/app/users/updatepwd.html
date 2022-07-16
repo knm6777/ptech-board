@@ -3,29 +3,31 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/base}"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-<div layout:fragment="content" class="main-content">
-    <div class="row my-5">
-        비밀번호 확인
+<div layout:fragment="content" class="main-content my-5">
+    <div class="d-flex justify-content-md-center">
+        <div class="my-3 border-bottom w-75 d-flex">
+            <h4>비밀번호 변경</h4>
+        </div>
     </div>
-    <div class="card-body">
-        <div class="text-start">
+    <div class=" d-flex justify-content-md-center">
+        <main class="w-50 justify-content-center">
             <input type="hidden" th:name="_csrf" th:value="${_csrf.token}"/>
-            <div class="input-group input-group-outline my-3">
-                <label class="form-label">비밀번호 확인</label>
-                <input type="password" id="cur-password" name="password" class="form-control">
+            <div class="row mb-md-3">
+                <label class="col-4 text-md-end">비밀번호 확인</label>
+                <input class="col form-control " type="password" id="cur-password">
             </div>
-            <div class="input-group input-group-outline my-3">
-                <label class="form-label">변경할 비밀번호 확인</label>
-                <input type="password" id="change-password" name="password" class="form-control">
+            <div class="row mb-md-3">
+                <label class="col-4 text-md-end">변경할 비밀번호 확인</label>
+                <input class="col form-control " type="password" id="change-password">
             </div>
-            <div class="input-group input-group-outline my-3">
-                <label class="form-label">변경할 비밀번호 다시 입력</label>
-                <input type="password" id="change-password2" name="password" class="form-control">
+            <div class="row mb-md-3">
+                <label class="col-4 text-md-end">변경할 비밀번호 다시 입력</label>
+                <input class="col form-control " type="password" id="change-password2">
             </div>
-        </div>
-        <div class="text-center">
-            <button class="btn bg-gradient-primary w-100 my-4 mb-2" id="checkPwd"> 비밀번호 변경</button>
-        </div>
+            <div class="text-center">
+                <button class="btn btn-info" id="checkPwd">비밀번호 변경</button>
+            </div>
+        </main>
     </div>
 </div>
 <th:block layout:fragment="scripts">
@@ -39,14 +41,16 @@
 
             if (!curPassword || curPassword.trim() === "") {
                 alert("비밀번호를 입력하세요.");
-            } else if(changePassword !== changePassword2) {
+            } else if (changePassword !== changePassword2) {
                 alert("변경할 비밀번호가 다릅니다. 다시 입력해주세요")
             } else {
                 $.ajax({
                     type: 'POST',
                     url: '/member/updatepwd',
-                    data: {'curPassword':curPassword,
-                        'changePassword':changePassword},
+                    data: {
+                        'curPassword': curPassword,
+                        'changePassword': changePassword
+                    },
                     dataType: "text",
                     beforeSend: function (xhr) {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
                         xhr.setRequestHeader(header, token);
@@ -54,7 +58,7 @@
                 }).done(function (result) {
                     console.log(result);
                     console.log(typeof result);
-                    if (result  === "true") {
+                    if (result === "true") {
                         console.log("비밀번호 변경 완료");
                         alert("비밀번호 변경 완료되었습니다.");
                         window.location.href = "/member/mypage";
