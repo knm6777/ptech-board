@@ -1,17 +1,5 @@
 .form-login {
-  width: 55%;
-  padding: 15px;
-  margin: auto;
-}
-.form-login input[type=email] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-.form-login input[type=password] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+  padding: 20px 200px 0px 200px;
 }
 
 .form-new {

@@ -50,7 +50,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr class="clickable-row" th:scope="row" th:each="post, iter: ${pagination.page.getContent()}"
+            <tr class="clickable-row" th:scope="row"
+                th:each="post, iter: ${pagination.page.getContent()}"
                 th:onclick="|location.href='@{/posts/}'+${post.getId()}|" style="cursor:pointer; text-align: center;">
                 <td th:text="${post.id}"></td>
                 <td>

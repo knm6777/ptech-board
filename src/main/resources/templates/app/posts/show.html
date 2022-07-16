@@ -2,103 +2,107 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/base}"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-<div layout:fragment="content" class="main-content">
-    <br>
-    <div class="alert alert-danger" role="alert" th:text="${postError}" th:if="${postError}"></div>
-    <div class="my-3 p-4 rounded-3">
-        <h1 th:text="${post.title}"></h1>
-        <div class="fs-6" th:text="'작성자: ' + ${post.getMember().getUsername()} + ' | 조회수: ' + ${post.getHit()}"></div>
-        <div class="fs-6" th:text="'최종 등록일: ' + ${#dates.format(post.createdAt, 'yyyy.MM.dd HH:mm:ss')}"></div>
-        <div class="fs-6"
-             th:text="'최종 수정일: ' + ${post.updatedAt != null ? #dates.format(post.updatedAt, 'yyyy.MM.dd HH:mm:ss') : '-'}"></div>
-        <hr>
-        <div th:utext="${post.getContent()}"></div>
-        <div th:if="${post.getFile() != null}" th:scope="row">
-            <!--            <img th:if="${post.getFile().getExtension() == 'jpeg' ||post.getFile().getExtension() == 'png'}"-->
-            <!--                 class="img-fluid"-->
-            <!--                 src="/Users/mkkim/Desktop/projects/board/upload/ + ${post.getFile().getName()} + '.' + ${post.getFile().getExtension()}">-->
+<div layout:fragment="content" class="main-content d-flex justify-content-center">
+    <div class="w-75 justify-content-center">
+        <div class="alert alert-danger" role="alert" th:text="${postError}" th:if="${postError}"></div>
+        <div class="my-3 p-4 rounded-3 ">
+            <h1 th:text="${post.title}"></h1>
+            <div class="fs-6"
+                 th:text="'작성자: ' + ${post.getMember().getUsername()} + ' | 조회수: ' + ${post.getHit()}"></div>
+            <div class="fs-6" th:text="'최종 등록일: ' + ${#dates.format(post.createdAt, 'yyyy.MM.dd HH:mm:ss')}"></div>
+            <div class="fs-6"
+                 th:text="'최종 수정일: ' + ${post.updatedAt != null ? #dates.format(post.updatedAt, 'yyyy.MM.dd HH:mm:ss') : '-'}"></div>
             <hr>
-            <div class="row">
-                <span>첨부파일</span>
+            <div th:utext="${post.getContent()}"></div>
+            <div th:if="${post.getFile() != null}" th:scope="row">
+                <!--            <img th:if="${post.getFile().getExtension() == 'jpeg' ||post.getFile().getExtension() == 'png'}"-->
+                <!--                 class="img-fluid"-->
+                <!--                 src="/Users/mkkim/Desktop/projects/board/upload/ + ${post.getFile().getName()} + '.' + ${post.getFile().getExtension()}">-->
+                <hr>
                 <div class="row">
-                    <a th:text="${post.getFile().getOriginalName()}"
-                       th:href="@{/files/{id}(id = ${post.getFile().getId()})}"></a>
-                </div>
-            </div>
-        </div>
-        <hr>
-        <div class="d-flex justify-content-between">
-            <a class="btn btn-secondary justify-content-start" th:href="@{'/posts'}">목록</a>
-            <div class="d-flex justify-content-end" th:if="${post.member.id == currentMember.id}">
-                <form th:action="@{/posts}" th:method="delete">
-                    <input type="hidden" name="id" th:field="*{post.id}">
-                    <button id="post-delete-btn" class="btn btn-danger btn-delete me-2"
-                            onclick="return confirm('정말 삭제하시겠습니까?');">삭제
-                    </button>
-                </form>
-                <a class="btn btn-warning" th:href="@{'/posts/'+${post.getId()}+'/edit'}">수정</a>
-            </div>
-        </div>
-        <hr>
-
-        <!--댓글 입력-->
-        <form id="post-form" th:object="${comment}" th:action="@{'/comments'}" th:method="post"
-              enctype="multipart/form-data">
-            <div class="d-flex">
-                <input type="hidden" name="postId" th:value="${post.id}">
-                <div class="w-100 me-2">
-                    <input type="text" class="form-control" th:field="*{content}" placeholder="댓글을 입력하세요." required>
-                </div>
-                <div class="flex-shrink-1">
-                    <input type="submit" class="btn btn-secondary" th:value="댓글저장">
-                </div>
-            </div>
-
-        </form>
-        <hr>
-        <!--댓글 목록-->
-        <div class="justify-content-start">
-            <div class="clickable-row d-flex bg-light border-bottom" th:id="editableComment + ${comm.id}"
-                 th:scope="row" th:each="comm, iter: ${pagination.page.getContent()}">
-                <div class="w-100">
-                    <small><a th:text="${comm.member.getUsername() +' | '}"></a></small>
-                    <small><a th:text="${#temporals.format( comm.createdAt, 'yyyy-MM-dd HH:mm:ss' )}"></a></small>
-                    <form class="d-flex justify-content-between me-2" id="form-edit-comment" th:object="${comment}"
-                          th:action="@{/comments}" th:method="put">
-                        <input type="hidden" name="id" th:value="${comm.getId()}">
-                        <input type="hidden" name="postId" th:value="${post.id}">
-                    <div class="justify-content-start align-self-center" id="comment-content"
-                         th:text="${comm.content}"></div>
-                    </form>
-                </div>
-
-                <div class="flex-shrink-1 align-self-center">
-                    <div class="dropstart " th:if="${comm.member.id == currentMember.id}">
-                        <a class="btn btn-secondary dropdown-toggle btn-sm" role="button" id="dropdownMenuLink"
-                           data-bs-toggle="dropdown" aria-expanded="false"></a>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <li><a class="dropdown-item" id="editItem" role="button" aria-expanded="false" onclick="changeComment()">수정</a></li>
-                            <li>
-                                <form th:id="comment-delete-form +${comm.id}" th:action="@{/comments}" th:method="delete">
-                                    <input type="hidden" name="commentId" th:value="${comm.id}">
-                                    <input type="hidden" name="id" th:value="${comm.id}">
-                                    <button class="dropdown-item">삭제</button>
-                                </form>
-                            </li>
-                        </ul>
+                    <span>첨부파일</span>
+                    <div class="row">
+                        <a th:text="${post.getFile().getOriginalName()}"
+                           th:href="@{/files/{id}(id = ${post.getFile().getId()})}"></a>
                     </div>
                 </div>
             </div>
-        </div>
-        <div th:replace="fragments/pagination :: pagination"></div>
-        <div class="d-flex gap-2 justify-content-start my-4">
-            <div>
-                <a class="btn btn-light btn-sm" th:href="${prePost ==  null ? '#' : '/posts/'  + prePost.getId()}"
-                   th:text="${prePost == null ? '이전글이 없습니다' : '이전글'}"></a>
+            <hr>
+            <div class="d-flex justify-content-between">
+                <a class="btn btn-secondary justify-content-start" th:href="@{'/posts'}">목록</a>
+                <div class="d-flex justify-content-end" th:if="${post.member.id == currentMember.id}">
+                    <form th:action="@{/posts}" th:method="delete">
+                        <input type="hidden" name="id" th:field="*{post.id}">
+                        <button id="post-delete-btn" class="btn btn-danger btn-delete me-2"
+                                onclick="return confirm('정말 삭제하시겠습니까?');">삭제
+                        </button>
+                    </form>
+                    <a class="btn btn-warning" th:href="@{'/posts/'+${post.getId()}+'/edit'}">수정</a>
+                </div>
             </div>
-            <div>
-                <a class="btn btn-light btn-sm" th:href="${nextPost == null ? '#' : '/posts/' + nextPost.getId()}"
-                   th:text="${nextPost == null ? '다음글이 없습니다' : '다음글'}"></a>
+            <hr>
+
+            <!--댓글 입력-->
+            <form id="post-form" th:object="${comment}" th:action="@{'/comments'}" th:method="post"
+                  enctype="multipart/form-data">
+                <div class="d-flex">
+                    <input type="hidden" name="postId" th:value="${post.id}">
+                    <div class="w-100 me-2">
+                        <input type="text" class="form-control" th:field="*{content}" placeholder="댓글을 입력하세요." required>
+                    </div>
+                    <div class="flex-shrink-1">
+                        <input type="submit" class="btn btn-secondary" th:value="댓글저장">
+                    </div>
+                </div>
+
+            </form>
+            <hr>
+            <!--댓글 목록-->
+            <div class="justify-content-start">
+                <div class="clickable-row d-flex bg-light border-bottom" th:id="editableComment + ${comm.id}"
+                     th:scope="row" th:each="comm, iter: ${pagination.page.getContent()}">
+                    <div class="w-100">
+                        <small><a th:text="${comm.member.getUsername() +' | '}"></a></small>
+                        <small><a th:text="${#temporals.format( comm.createdAt, 'yyyy-MM-dd HH:mm:ss' )}"></a></small>
+                        <form class="d-flex justify-content-between me-2" id="form-edit-comment" th:object="${comment}"
+                              th:action="@{/comments}" th:method="put">
+                            <input type="hidden" name="id" th:value="${comm.getId()}">
+                            <input type="hidden" name="postId" th:value="${post.id}">
+                            <div class="justify-content-start align-self-center" id="comment-content"
+                                 th:text="${comm.content}"></div>
+                        </form>
+                    </div>
+
+                    <div class="flex-shrink-1 align-self-center">
+                        <div class="dropstart " th:if="${comm.member.id == currentMember.id}">
+                            <a class="btn btn-secondary dropdown-toggle btn-sm" role="button" id="dropdownMenuLink"
+                               data-bs-toggle="dropdown" aria-expanded="false"></a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                <li><a class="dropdown-item" id="editItem" role="button" aria-expanded="false"
+                                       onclick="changeComment()">수정</a></li>
+                                <li>
+                                    <form th:id="comment-delete-form +${comm.id}" th:action="@{/comments}"
+                                          th:method="delete">
+                                        <input type="hidden" name="commentId" th:value="${comm.id}">
+                                        <input type="hidden" name="id" th:value="${comm.id}">
+                                        <button class="dropdown-item">삭제</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div th:replace="fragments/pagination :: pagination"></div>
+            <div class="d-flex gap-2 justify-content-start my-4">
+                <div>
+                    <a class="btn btn-light btn-sm" th:href="${prePost ==  null ? '#' : '/posts/'  + prePost.getId()}"
+                       th:text="${prePost == null ? '이전글이 없습니다' : '이전글'}"></a>
+                </div>
+                <div>
+                    <a class="btn btn-light btn-sm" th:href="${nextPost == null ? '#' : '/posts/' + nextPost.getId()}"
+                       th:text="${nextPost == null ? '다음글이 없습니다' : '다음글'}"></a>
+                </div>
             </div>
         </div>
     </div>

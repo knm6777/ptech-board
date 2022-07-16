@@ -10,118 +10,122 @@
             <h2>마이페이지</h2>
         </div>
         <hr>
-        <div class="card text-center p-0">
-            <div class="card-header">
-                <ul class="nav nav-tabs card-header-tabs" id="myTab">
-                    <li class="nav-item">
-                        <a href="#myposts" class="nav-link active" data-bs-toggle="tab">내 글</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#mycomments" class="nav-link" data-bs-toggle="tab">내 댓글</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#myinfo" class="nav-link" data-bs-toggle="tab">내 정보</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="card-body">
-                <div class="tab-content">
-                    <div class="tab-pane fade show active" id="myposts">
-                        <table class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th scope="col" style="width: 15%">번호</th>
-                                <th scope="col" style="width: 50%">제목</th>
-                                <th scope="col" style="width: 20%">등록일</th>
-                                <th scope="col" style="width: 15%">조회수</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr class="clickable-row" th:scope="row"
-                                th:each="post, iter: ${pagination.page.getContent()}"
-                                th:onclick="|location.href='@{/posts/}'+${post.getId()}|">
-                                <td th:text="${post.getId()}"></td>
-                                <td>
-                                    <span th:text="${post.getComments().size() >  0  ? post.getTitle() + ' (' + post.comments.size() + ')' : post.getTitle()}"></span>
-                                    <img th:if="${post.getFile() != null}"
-                                         th:src="@{/icons/bootstrap-icons-1.8.3/paperclip.svg}" width="15">
-                                </td>
-                                <td th:text="${#temporals.format( post.createdAt, 'yyyy-MM-dd HH:mm:ss' )}"></td>
-                                <td th:text="${post.getHit()}"></td>
-                            </tr>
-
-                            <tr th:if="${pagination.page.getContent().size() == 0}">
-                                <td colspan="5">조회된 결과가 없습니다.</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <div th:replace="fragments/pagination :: pagination"></div>
-
+        <div class=" d-flex justify-content-md-center">
+            <main class="w-75 justify-content-center">
+                <div class="card text-center p-0">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs" id="myTab">
+                            <li class="nav-item">
+                                <a href="#myposts" class="nav-link active" data-bs-toggle="tab">내 글</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#mycomments" class="nav-link" data-bs-toggle="tab">내 댓글</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#myinfo" class="nav-link" data-bs-toggle="tab">내 정보</a>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="tab-pane fade" id="mycomments">
-                        <table class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th scope="col" style="width: 10%">게시글 번호</th>
-                                <th scope="col" style="width: 20%">게시글 제목</th>
-                                <th scope="col" style="width: 50%">댓글 내용</th>
-                                <th scope="col" style="width: 20%">등록일</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr class="clickable-row" th:scope="row" th:each="comment, iter: ${comments}"
-                                th:onclick="|location.href='@{/posts/}'+${comment.getPost().id}|">
-                                <td th:text="${comment.getPost().id}"></td>
-                                <td th:text="${comment.getPost().title}"></td>
-                                <td th:text="${comment.getContent()}"></td>
-                                <td th:text="${#temporals.format( comment.createdAt, 'yyyy-MM-dd HH:mm:ss' )}"></td>
-                            </tr>
-                            <tr th:if="${comments.size() == 0}">
-                                <td colspan="5">조회된 결과가 없습니다.</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="tab-pane fade " id="myinfo">
-                        <div class="my-md-3">
-                            <img th:src="@{/icons/bootstrap-icons-1.8.3/paperclip.svg}"
-                                 width="200px">
-                        </div>
-                        <div class="mx-md-auto">
-                            <table class="table">
-                                <thead class="disabled">
-                                <tr>
-                                    <th scope="col" style="width: 50%"></th>
-                                    <th scope="col" style="width: 50%"></th>
-                                </tr>
-                                </thead>
-                                <tr>
-                                    <td>사용자 아이디</td>
-                                    <td th:text="${member.getUsername()}"></td>
-                                </tr>
-                                <tr>
-                                    <td>사용자 이메일</td>
-                                    <td th:text="${member.getEmail()}"></td>
-                                </tr>
-                                <tr>
-                                    <td>한 줄 소개</td>
-                                    <td th:if="${member.getSelfIntroduction() != null }" th:text="${member.getSelfIntroduction()}"></td>
-                                    <td th:unless="${member.getSelfIntroduction() != null }">자기소개가 없습니다.</td>
-                                </tr>
-                                <tr>
-                                    <td>계정 생성 날짜</td>
-                                    <td th:text="${'계정 생성 날짜 :' + #temporals.format( member.createdAt, 'yyyy-MM-dd' )}"></td>
-                                </tr>
-                            </table>
-                        </div>
-                        <a th:href="@{/member/updatepwd}" class="justify-content-start btn btn-info">
-                            비밀번호 변경</a>
-                        <a th:href="@{/member/update}" class="justify-content-start btn btn-info">
-                            내 정보 수정</a>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="myposts">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col" style="width: 15%">번호</th>
+                                        <th scope="col" style="width: 50%">제목</th>
+                                        <th scope="col" style="width: 20%">등록일</th>
+                                        <th scope="col" style="width: 15%">조회수</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="clickable-row" th:scope="row"
+                                        th:each="post, iter: ${pagination.page.getContent()}"
+                                        th:onclick="|location.href='@{/posts/}'+${post.getId()}|" style="cursor:pointer;">
+                                        <td th:text="${post.getId()}"></td>
+                                        <td>
+                                            <span th:text="${post.getComments().size() >  0  ? post.getTitle() + ' (' + post.comments.size() + ')' : post.getTitle()}"></span>
+                                            <img th:if="${post.getFile() != null}"
+                                                 th:src="@{/icons/bootstrap-icons-1.8.3/paperclip.svg}" width="15">
+                                        </td>
+                                        <td th:text="${#temporals.format( post.createdAt, 'yyyy-MM-dd HH:mm:ss' )}"></td>
+                                        <td th:text="${post.getHit()}"></td>
+                                    </tr>
+                                    <tr th:if="${pagination.page.getContent().size() == 0}">
+                                        <td colspan="5">조회된 결과가 없습니다.</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div th:replace="fragments/pagination :: pagination"></div>
 
+                            </div>
+                            <div class="tab-pane fade" id="mycomments">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col" style="width: 50px">번호</th>
+                                        <th scope="col">게시글 제목</th>
+                                        <th scope="col">댓글 내용</th>
+                                        <th scope="col">등록일</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="clickable-row" th:scope="row" th:each="comment, iter: ${comments}"
+                                        th:onclick="|location.href='@{/posts/}'+${comment.getPost().id}|">
+                                        <td th:text="${comment.getPost().id}"></td>
+                                        <td th:text="${comment.getPost().title}"></td>
+                                        <td th:text="${comment.getContent()}"></td>
+                                        <td th:text="${#temporals.format( comment.createdAt, 'yyyy-MM-dd HH:mm:ss' )}"></td>
+                                    </tr>
+                                    <tr th:if="${comments.size() == 0}">
+                                        <td colspan="5">조회된 결과가 없습니다.</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade " id="myinfo">
+                                <div class="my-md-3">
+                                    <img th:src="@{/icons/bootstrap-icons-1.8.3/paperclip.svg}"
+                                         width="200px">
+                                </div>
+                                <div class="mx-md-auto">
+                                    <table class="table">
+                                        <thead class="disabled">
+                                        <tr>
+                                            <th scope="col" style="width: 50%"></th>
+                                            <th scope="col" style="width: 50%"></th>
+                                        </tr>
+                                        </thead>
+                                        <tr>
+                                            <td>사용자 아이디</td>
+                                            <td th:text="${member.getUsername()}"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>사용자 이메일</td>
+                                            <td th:text="${member.getEmail()}"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>한 줄 소개</td>
+                                            <td th:if="${member.getSelfIntroduction() != null }"
+                                                th:text="${member.getSelfIntroduction()}"></td>
+                                            <td th:unless="${member.getSelfIntroduction() != null }">자기소개가 없습니다.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>계정 생성 날짜</td>
+                                            <td th:text="${'계정 생성 날짜 :' + #temporals.format( member.createdAt, 'yyyy-MM-dd' )}"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <a th:href="@{/member/updatepwd}" class="justify-content-start btn btn-info">
+                                    비밀번호 변경</a>
+                                <a th:href="@{/member/update}" class="justify-content-start btn btn-info">
+                                    내 정보 수정</a>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </main>
         </div>
     </div>
 </div>
