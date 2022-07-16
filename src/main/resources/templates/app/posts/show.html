@@ -15,9 +15,6 @@
             <hr>
             <div th:utext="${post.getContent()}"></div>
             <div th:if="${post.getFile() != null}" th:scope="row">
-                <!--            <img th:if="${post.getFile().getExtension() == 'jpeg' ||post.getFile().getExtension() == 'png'}"-->
-                <!--                 class="img-fluid"-->
-                <!--                 src="/Users/mkkim/Desktop/projects/board/upload/ + ${post.getFile().getName()} + '.' + ${post.getFile().getExtension()}">-->
                 <hr>
                 <div class="row">
                     <span>첨부파일</span>

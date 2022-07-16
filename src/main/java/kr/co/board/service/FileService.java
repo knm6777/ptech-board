@@ -41,9 +41,14 @@ public class FileService {
     @PostConstruct
     public void initializeDirectory() {
         Path attachmentPath = Paths.get(this.uploadPath);
+        Path summernoteImgPath = Paths.get(this.uploadPath + "/summernote");
+
         try {
             if (!Files.exists(attachmentPath)) {
                 Files.createDirectories(attachmentPath);
+            }
+            if (!Files.exists(summernoteImgPath)) {
+                Files.createDirectories(summernoteImgPath);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -129,5 +134,16 @@ public class FileService {
         fileRepository.deleteById(id);
         String path = this.uploadPath + fileToDelete.getRelativePath();
         FileUtils.deleteQuietly(FileUtils.getFile(path));
+    }
+    @Transactional
+    public List<File> saveImages(MultipartFile[] multipartFiles) throws IOException {
+        List<File> files = new ArrayList<>();
+        for (MultipartFile multipartFile: multipartFiles) {
+            File file = createFile(multipartFile);
+            file = fileRepository.save(file);
+            uploadFile(multipartFile, file);
+            files.add(file);
+        }
+        return files;
     }
 }
