@@ -67,13 +67,16 @@ public class MemberController {
 
     @GetMapping("/mypage")
     public String indexMypage(@CurrentUser Member member, Model model, @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<Post> postPage = postService.findAllByMember(member, pageable);
 
-        String url = "/member/mypage";
-        Pagination pagination = new Pagination(postPage, pageable, url);
+        Pagination pagination = new Pagination(pageable);
+        Page<Post> postPage = postService.findAllByMember(member, pagination);
+
+        pagination.setTotalPages(postPage.getTotalPages());
+        pagination.setTotalElements(postPage.getTotalElements());
 
         model.addAttribute("comments", commentService.findAllByMember(member));
         model.addAttribute("pagination", pagination);
+        model.addAttribute("posts", postPage);
         model.addAttribute("member", member);
 
         return "app/users/mypage";

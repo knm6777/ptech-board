@@ -4,7 +4,7 @@
       layout:decorate="~{layouts/base}"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <div layout:fragment="content" class="main-content mx-md-5">
-    <div class="row my-5 justify-content-center" >
+    <div class="row my-5 justify-content-center">
         <h2>자유 게시판</h2>
     </div>
     <div class="d-flex justify-content-center my-md-3">
@@ -26,16 +26,18 @@
         </form>
     </div>
     <div class="d-flex justify-content-between my-md-3">
-        <div th:text="${'총 게시물 | ' + pagination.page.totalElements + ' 개'}"></div>
-        <div class="d-flex">
-            <select class="form-select form-select-sm me-2" style="width: auto;">
-                <option value="pagesize10" selected>5줄 보기</option>
-                <option value="pagesize20">10줄 보기</option>
+        <div th:text="${'총 게시물 | ' + pagination.totalElements + ' 개'}"></div>
+        <div class="form-group">
+            <label for="page-size-select" class="d-none"></label>
+            <select class="form-select form-select-sm me-2" id="page-size-select" th:field="*{pagination.pageSize}"
+                    th:value="*{pagination.pageSize}" style="width: auto;">
+                <option th:value="5" th:text="'5개씩'" th:selected="${pagination.pageSize==5}"></option>
+                <option th:value="10" th:text="'10개씩'" th:selected="${pagination.pageSize==10}"></option>
             </select>
-            <select class="form-select form-select-sm">
-                <option value="OrderByCreatedAt" selected>최신순</option>
-                <option value="orderByHit">조회순</option>
-            </select>
+            <!--            <select class="form-select form-select-sm">-->
+            <!--                <option value="OrderByCreatedAt" selected>최신순</option>-->
+            <!--                <option value="orderByHit">조회순</option>-->
+            <!--            </select>-->
         </div>
     </div>
     <div class="table-responsive clearfix">
@@ -51,7 +53,7 @@
             </thead>
             <tbody>
             <tr class="clickable-row" th:scope="row"
-                th:each="post, iter: ${pagination.page.getContent()}"
+                th:each="post, iter: ${posts}"
                 th:onclick="|location.href='@{/posts/}'+${post.getId()}|" style="cursor:pointer; text-align: center;">
                 <td th:text="${post.id}"></td>
                 <td>
@@ -63,7 +65,7 @@
                 <td th:text="${#temporals.format( post.createdAt, 'yyyy-MM-dd' )}"></td>
                 <td th:text="${post.getHit()}"></td>
             </tr>
-            <tr th:if="${pagination.page.getContent().size() == 0}">
+            <tr th:if="${pagination.totalElements == 0}">
                 <td colspan="5">조회된 결과가 없습니다.</td>
             </tr>
             </tbody>
@@ -76,13 +78,35 @@
     </div>
 
 </div>
-
 <hr>
-</body>
-<th:block>
+<th:block layout:fragment="scripts">
     <script>
         $(".dropdown-menu li a").click(function () {
             $("#dropdownMenuLink").html($(this).text() + ' <span class="caret"></span>');
         });
+
+        var searchParams = new URLSearchParams(window.location.search)
+        $("#page-size-select").on("change", function (e) {
+            searchParams.set("size", $(this).val());
+            location.href = location.pathname + "?" + searchParams.toString();
+        });
+    </script>
+    <script>
+        document.getElementById('branche').onchange = function() {
+            localStorage.setItem('selectedtem', document.getElementById('branche').value);
+        };
+
+        if (localStorage.getItem('selectedtem')) {
+            document.getElementById('branche').options[localStorage.getItem('selectedtem')].selected = true;
+        }
+
+        $('#branche').change(function(event){
+            var selectedcategory = $(this).children("option:selected").val();
+            sessionStorage.setItem("itemName",selectedcategory);
+        });
+
+        $('select').find('option[value='+sessionStorage.getItem('itemName')+']').attr('selected','selected');
+
     </script>
 </th:block>
+</body>

@@ -57,7 +57,7 @@
             <!--댓글 목록-->
             <div class="justify-content-start">
                 <div class="clickable-row d-flex bg-light border-bottom" th:id="editableComment + ${comm.id}"
-                     th:scope="row" th:each="comm, iter: ${pagination.page.getContent()}">
+                     th:scope="row" th:each="comm, iter: ${comments}">
                     <div class="w-100">
                         <small><a th:text="${comm.member.getUsername() +' | '}"></a></small>
                         <small><a th:text="${#temporals.format( comm.createdAt, 'yyyy-MM-dd HH:mm:ss' )}"></a></small>

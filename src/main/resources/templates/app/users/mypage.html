@@ -40,9 +40,9 @@
                                     </thead>
                                     <tbody>
                                     <tr class="clickable-row" th:scope="row"
-                                        th:each="post, iter: ${pagination.page.getContent()}"
+                                        th:each="post, iter: ${posts}"
                                         th:onclick="|location.href='@{/posts/}'+${post.getId()}|" style="cursor:pointer;">
-                                        <td th:text="${post.getId()}"></td>
+                                        <td th:text="${post.id}"></td>
                                         <td>
                                             <span th:text="${post.getComments().size() >  0  ? post.getTitle() + ' (' + post.comments.size() + ')' : post.getTitle()}"></span>
                                             <img th:if="${post.getFile() != null}"
@@ -51,7 +51,7 @@
                                         <td th:text="${#temporals.format( post.createdAt, 'yyyy-MM-dd HH:mm:ss' )}"></td>
                                         <td th:text="${post.getHit()}"></td>
                                     </tr>
-                                    <tr th:if="${pagination.page.getContent().size() == 0}">
+                                    <tr th:if="${pagination.totalElements == 0}">
                                         <td colspan="5">조회된 결과가 없습니다.</td>
                                     </tr>
                                     </tbody>

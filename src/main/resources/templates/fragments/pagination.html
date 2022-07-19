@@ -1,38 +1,62 @@
-<nav xmlns:th="http://www.thymeleaf.org" th:fragment="pagination"
-     th:with="begin = ${pagination.begin},
-                end = ${pagination.end},
-                url = ${pagination.url},
-                query = ${pagination.query},
-                current = ${pagination.current},
-                totalPages = ${pagination.page.totalPages},
-                contentSize = ${pagination.page.getContent().size()}"
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div class="d-flex justify-content-center" th:fragment="pagination"
+     th:with="begin = ${pagination.getBegin()},
+                end = ${pagination.getEnd()},
+                query = ${pagination.getQuery()},
+                current = ${pagination.getCurrent()},
+                totalPages = ${pagination.totalPages},
+                contentSize = ${pagination.totalElements}"
      aria-label="Page navigation">
-    <ul class="pagination justify-content-center" th:if="${contentSize != 0}">
-        <li class="page-item" th:if="${current != begin}">
-            <a class="page-link" href="#" th:href="@{{pageUrl}(pageUrl=${url}, page=0)}+'&'+${query}" aria-label="Previous">
+
+    <ul class="pagination" th:if="${totalPages > 0}">
+        <li class="page-item" th:if="${begin != current}">
+            <a class="page-link"
+               th:href="@{__${#httpServletRequest.servletPath}__(page=0, size=${pagination.pageSize})} + '&' + ${pagination.query}" aria-label="Previous">
                 <span aria-hidden="true">&lt;&lt;</span>
             </a>
         </li>
         <li th:if="${current <= 5 && current > 1}">
-            <a class="page-link" href="#" th:href="@{{pageUrl}(pageUrl=${url}, page=${current - 2})}+'&'+${query}">
+            <a class="page-link"
+               th:href="@{__${#httpServletRequest.servletPath}__(page=${current - 2}, size=${pagination.pageSize})} + '&' + ${pagination.query}">
                 <span aria-hidden="true">&lt;</span>
             </a>
         </li>
-        <li class="page-item" th:each="i : ${#numbers.sequence(begin, end)}" th:classappend="${i == current} ? 'active'">
-            <a th:if="${i > 0}" class="page-link" href="#" th:href="@{{pageUrl}(pageUrl=${url}, page=${i - 1})}+'&'+${query}">
+        <li th:if="${pagination.current > 5}">
+            <a class="page-link"
+               th:href="@{__${#httpServletRequest.servletPath}__(page=${current - pagination.pageSize}, size=${pagination.pageSize})} + '&' + ${pagination.query}">
+                <span aria-hidden="true">&lt;</span>
+            </a>
+        </li>
+
+        <li class="page-item" th:each="i : ${#numbers.sequence(begin, end)}"
+            th:classappend="${i == current} ? 'active'">
+            <a class="page-link"
+               th:href="@{__${#httpServletRequest.servletPath}__(page=${i - 1}, size=${pagination.pageSize})} + '&' + ${pagination.query}">
                 <span th:text="${i}"></span>
             </a>
         </li>
-        <li th:if="${(current >= (totalPages - 5)) && (current < totalPages)}">
-        <a class="page-link" href="#" th:href="@{{pageUrl}(pageUrl=${url}, page=${current})}+'&'+${query}">
+
+        <li th:if="${current < (totalPages - 5)}">
+            <a class="page-link" th:if="${i > 0}"
+               th:href="@{__${#httpServletRequest.servletPath}__(page=${current + 5}, size=${pagination.pageSize})} + '&' + ${pagination.query}">
                 <span aria-hidden="true">&gt;</span>
             </a>
         </li>
 
-        <li class="page-item" th:if="${current != end && current != 0}">
-            <a class="page-link" href="#" th:href="@{{pageUrl}(pageUrl=${url}, page=${totalPages - 1})}+'&'+${query}">
+        <li th:if="${(current >= (totalPages - 5)) && (current < totalPages)}">
+            <a class="page-link"
+               th:href="@{__${#httpServletRequest.servletPath}__(page=${totalPages}, size=${pagination.pageSize})} + '&' + ${pagination.query}">
+                <span aria-hidden="true">&gt;</span>
+            </a>
+        </li>
+
+        <li th:if="${current < totalPages}">
+            <a class="page-link"
+               th:href="@{__${#httpServletRequest.servletPath}__(page=${totalPages}, size=${pagination.pageSize})} + '&' + ${pagination.query}">
                 <span aria-hidden="true">&gt;&gt;</span>
             </a>
         </li>
     </ul>
-</nav>
+</div>
+</html>

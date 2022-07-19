@@ -37,13 +37,16 @@ public class PostController {
     private final FileService fileService;
 
     @GetMapping("")
-    public String index(Model model, @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String index(Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        Page<Post> postPage = postService.findAll(pageable);
+        Pagination pagination = new Pagination(pageable);
+        Page<Post> postPage = postService.findAll(pagination);
 
-        String url = "/posts";
-        Pagination pagination = new Pagination(postPage, pageable, url);
+        pagination.setTotalPages(postPage.getTotalPages());
+        pagination.setTotalElements(postPage.getTotalElements());
+
         model.addAttribute("pagination", pagination);
+        model.addAttribute("posts", postPage);
 
         return "app/posts/index";
     }
@@ -67,8 +70,10 @@ public class PostController {
         final int start = (int)pageable.getOffset();
         final int end = Math.min((start + pageable.getPageSize()), comments.size());
         final Page<Comment> commentPage = new PageImpl<>(comments.subList(start, end), pageable, comments.size());
-        String url = "/posts/"+id;
-        Pagination pagination = new Pagination(commentPage, pageable, url);
+
+        Pagination pagination = new Pagination(pageable);
+        pagination.setTotalPages(commentPage.getTotalPages());
+        pagination.setTotalElements(commentPage.getTotalElements());
 
         Post prePost = postService.findPrePost(id);
         Post nextPost = postService.findNextPost(id);
@@ -76,6 +81,7 @@ public class PostController {
         model.addAttribute("post", post);
         model.addAttribute("nextPost", nextPost);
         model.addAttribute("prePost", prePost);
+        model.addAttribute("comments", commentPage);
         model.addAttribute("currentMember", currentMember);
         model.addAttribute("pagination", pagination);
 
