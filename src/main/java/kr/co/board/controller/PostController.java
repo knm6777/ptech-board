@@ -38,7 +38,8 @@ public class PostController {
     private final FileService fileService;
 
     @GetMapping("")
-    public String index(Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, @ModelAttribute(name = "boardSearchParam") BoardSearchParam searchParam) {
+    public String index(Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                        @ModelAttribute(name = "boardSearchParam") BoardSearchParam searchParam) {
 
         Pagination pagination = new Pagination(pageable);
         Page<Post> postPage = postService.findAllBySearchParam(pagination, searchParam);
@@ -54,7 +55,8 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public String show(@CurrentUser Member currentMember, @PathVariable Long id, Model model, @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String show(@CurrentUser Member currentMember, @PathVariable Long id, Model model,
+                       @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         Post post = postService.findById(id);
 
         if(post == null) {

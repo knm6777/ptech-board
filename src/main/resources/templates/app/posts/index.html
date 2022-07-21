@@ -4,14 +4,15 @@
       layout:decorate="~{layouts/base}"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <div layout:fragment="content" class="main-content mx-md-5"
-     th:with="SearchType=${T(kr.co.board.model.enums.SearchType)}">
+     th:with="SearchType=${T(kr.co.board.model.enums.SearchType)},
+            SortType=${T(kr.co.board.model.enums.SortType)}">
     <div class="row my-5 justify-content-center">
         <h2>자유 게시판</h2>
     </div>
 
     <div class="my-md-3">
         <div class="search-form-area">
-            <form th:object="${boardSearchParam}" action="#" th:action="@{/posts/}">
+            <form id="search-form" th:object="${boardSearchParam}" action="#" th:action="@{/posts/}">
                 <div class="row justify-content-center align-items-end">
                     <div class="col-auto">
                         <div class="form-group">
@@ -36,26 +37,31 @@
             </form>
         </div>
     </div>
-    <div class="d-flex justify-content-center" th:object="${boardSearchParam}" th:if="${boardSearchParam.getSearchWord()!=null}">
+    <div class="d-flex justify-content-center" th:object="${boardSearchParam}"
+         th:if="${boardSearchParam.getSearchWord()!=null && boardSearchParam.getSearchWord()!=''}">
         <div>
-            <div class="justify-content-center" th:text="'\''+${boardSearchParam.getSearchWord()} +'\''+ '에 대한 검색결과 ' +${pagination.totalElements} +'건'"></div>
+            <div class="justify-content-center"
+                 th:text="'\''+${boardSearchParam.getSearchWord()} +'\''+ '에 대한 검색결과 ' +${pagination.totalElements} +'건'"></div>
         </div>
     </div>
 
     <div class="d-flex justify-content-between my-md-3">
-        <div th:if="${boardSearchParam.getSearchWord()==null}" th:text="${'총 게시물 | ' + pagination.totalElements + ' 개'}"></div>
-        <div  th:if="${boardSearchParam.getSearchWord()!=null}"></div>
-        <div class="form-group">
+        <div th:if="${boardSearchParam.getSearchWord()==null}"
+             th:text="${'총 게시물 | ' + pagination.totalElements + ' 개'}"></div>
+        <div th:if="${boardSearchParam.getSearchWord()!=null}"></div>
+        <div class="form-group d-flex">
             <label for="page-size-select" class="d-none"></label>
             <select class="form-select form-select-sm me-2" id="page-size-select" th:field="*{pagination.pageSize}"
                     th:value="*{pagination.pageSize}" style="width: auto;">
                 <option th:value="5" th:text="'5개씩'" th:selected="${pagination.pageSize==5}"></option>
                 <option th:value="10" th:text="'10개씩'" th:selected="${pagination.pageSize==10}"></option>
             </select>
-            <!--            <select class="form-select form-select-sm">-->
-            <!--                <option value="OrderByCreatedAt" selected>최신순</option>-->
-            <!--                <option value="orderByHit">조회순</option>-->
-            <!--            </select>-->
+            <label>
+                <select form="search-form" class="form-select form-select-sm" th:field="*{boardSearchParam.sort}" style="width: auto;" >
+                    <option th:value="${SortType.CREATED_AT.getUrl()}" th:text="'최신순'" th:selected="${boardSearchParam.sort == SortType.CREATED_AT.getUrl()}"></option>
+                    <option th:value="${SortType.HIT.getUrl()}" th:text="'조회순'" th:selected="${boardSearchParam.sort == SortType.HIT.getUrl()}"></option>
+                </select>
+            </label>
         </div>
     </div>
     <div class="table-responsive clearfix">
@@ -104,8 +110,14 @@
         });
 
         var searchParams = new URLSearchParams(window.location.search)
+
         $("#page-size-select").on("change", function (e) {
             searchParams.set("size", $(this).val());
+            location.href = location.pathname + "?" + searchParams.toString();
+        });
+
+        $("#sort").on("change", function (e) {
+            searchParams.set("sort", $(this).val());
             location.href = location.pathname + "?" + searchParams.toString();
         });
     </script>
