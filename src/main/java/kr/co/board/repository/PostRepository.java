@@ -4,6 +4,8 @@ import kr.co.board.model.Member;
 import kr.co.board.model.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -12,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PostRepository extends PagingAndSortingRepository<Post, Long> {
+public interface PostRepository extends PagingAndSortingRepository<Post, Long>, JpaSpecificationExecutor<Post> {
 
 
     Optional<Post> findById(Long id);
@@ -27,6 +29,8 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Long> {
 //            "LEFT OUTER JOIN p.comments c \n" +
 //            "LEFT JOIN p.file f \n", nativeQuery = true)
     Page<Post> findAll(Pageable pageable);
+
+    Page<Post> findAll(Specification<Post> specification, Pageable pageable);
 
     Page<Post> findAllByMember(Member member, Pageable pageable);
 

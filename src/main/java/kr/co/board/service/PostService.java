@@ -1,10 +1,13 @@
 package kr.co.board.service;
 
+import kr.co.board.model.BoardSearchParam;
 import kr.co.board.model.Member;
 import kr.co.board.model.Post;
 import kr.co.board.repository.PostRepository;
+import kr.co.board.specification.PostSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +28,6 @@ public class PostService {
     }
 
     public Post findById(Long id) {
-//        return postRepository.findById(id).orElse(null);
         return postRepository.findByIdJoin(id);
     }
 
@@ -37,6 +39,17 @@ public class PostService {
     @Transactional
     public Post findPrePost(Long id){
         return postRepository.findPrePost(id);
+    }
+
+    public Page<Post> findAllBySearchParam(Pageable pageable, BoardSearchParam boardSearchParam) {
+        Specification<Post> specification;
+
+        if (boardSearchParam.getSearchType() != null) { // FAQ, 공지사항일 경우
+            specification = Specification.where(PostSpecification.likeSearchWord(boardSearchParam.getSearchType(), boardSearchParam.getSearchWord()));
+            return postRepository.findAll(specification, pageable);
+        } else {
+            return postRepository.findAll(pageable);
+        }
     }
 
     public void save(Post post) throws IOException {

@@ -90,7 +90,6 @@
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    // editor.summernote('insertImage', '/upload' + data.relativePath);
                     for (var i = 0; i < data.length; i++) {
                         editor.summernote('insertImage', '/upload' + data[i].relativePath);
                     }

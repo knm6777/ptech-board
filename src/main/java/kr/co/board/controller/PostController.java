@@ -1,6 +1,7 @@
 package kr.co.board.controller;
 
 import kr.co.board.exception.CustomException;
+import kr.co.board.model.BoardSearchParam;
 import kr.co.board.model.Comment;
 import kr.co.board.model.enums.ErrorCode;
 import kr.co.board.model.Member;
@@ -37,13 +38,14 @@ public class PostController {
     private final FileService fileService;
 
     @GetMapping("")
-    public String index(Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String index(Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, @ModelAttribute(name = "boardSearchParam") BoardSearchParam searchParam) {
 
         Pagination pagination = new Pagination(pageable);
-        Page<Post> postPage = postService.findAll(pagination);
+        Page<Post> postPage = postService.findAllBySearchParam(pagination, searchParam);
 
         pagination.setTotalPages(postPage.getTotalPages());
         pagination.setTotalElements(postPage.getTotalElements());
+        pagination.setQuery(searchParam.getQuery());
 
         model.addAttribute("pagination", pagination);
         model.addAttribute("posts", postPage);

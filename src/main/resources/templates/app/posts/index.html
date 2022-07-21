@@ -3,28 +3,41 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/base}"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-<div layout:fragment="content" class="main-content mx-md-5">
+<div layout:fragment="content" class="main-content mx-md-5"
+     th:with="SearchType=${T(kr.co.board.model.enums.SearchType)}">
     <div class="row my-5 justify-content-center">
         <h2>자유 게시판</h2>
     </div>
+
     <div class="d-flex justify-content-center my-md-3">
-        <form class="d-flex search-form">
-            <div class="dropdown me-2">
-                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                   data-bs-toggle="dropdown" aria-expanded="false">
-                    제목<span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" id="title" href="#">제목</a></li>
-                    <li><a class="dropdown-item" id="content" href="#">내용</a></li>
-                    <li><a class="dropdown-item" id="mix" href="#">제목+내용</a></li>
-                    <li><a class="dropdown-item" id="writer" href="#">작성자</a></li>
-                </ul>
-            </div>
-            <input class="form-control me-2" type="search" aria-label="Search" id="keyword" placeholder="검색어를 입력하세요.">
-            <button class="btn btn-outline-success" type="submit" id="btnSearch">Search</button>
-        </form>
+
+        <div class="search-form-area">
+            <form th:object="${boardSearchParam}" action="#" th:action="@{/posts/}">
+                <div class="row justify-content-end align-items-end">
+                    <div class="col-sm-12 col-md-3">
+                        <div class="form-group">
+                            <label th:for="searchType" class="d-none"></label>
+                            <select class="form-select" th:field="*{searchType}">
+                                <option th:each="searchType: ${SearchType.values()}" th:value="${searchType}"
+                                        th:text="${searchType.getTitle()}"
+                                        th:selected="${searchType == SearchType}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                        <div class="form-group">
+                            <label for="searchWord" class="d-none"></label>
+                            <input id="searchWord" type="text" class="form-control" placeholder="검색어" name="searchWord">
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-primary mt-2" type="submit">검색</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
+
     <div class="d-flex justify-content-between my-md-3">
         <div th:text="${'총 게시물 | ' + pagination.totalElements + ' 개'}"></div>
         <div class="form-group">
@@ -90,23 +103,6 @@
             searchParams.set("size", $(this).val());
             location.href = location.pathname + "?" + searchParams.toString();
         });
-    </script>
-    <script>
-        document.getElementById('branche').onchange = function() {
-            localStorage.setItem('selectedtem', document.getElementById('branche').value);
-        };
-
-        if (localStorage.getItem('selectedtem')) {
-            document.getElementById('branche').options[localStorage.getItem('selectedtem')].selected = true;
-        }
-
-        $('#branche').change(function(event){
-            var selectedcategory = $(this).children("option:selected").val();
-            sessionStorage.setItem("itemName",selectedcategory);
-        });
-
-        $('select').find('option[value='+sessionStorage.getItem('itemName')+']').attr('selected','selected');
-
     </script>
 </th:block>
 </body>

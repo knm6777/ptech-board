@@ -14,8 +14,6 @@ import java.util.StringJoiner;
 public class BoardSearchParam {
     private SearchType searchType;
     private String searchWord;
-    private Long institutionId;
-    private boolean isHidden = true;
 
     public String getQuery() {
         StringJoiner stringJoiner = new StringJoiner("&");
