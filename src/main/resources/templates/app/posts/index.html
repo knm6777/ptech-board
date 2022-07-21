@@ -57,9 +57,12 @@
                 <option th:value="10" th:text="'10개씩'" th:selected="${pagination.pageSize==10}"></option>
             </select>
             <label>
-                <select form="search-form" class="form-select form-select-sm" th:field="*{boardSearchParam.sort}" style="width: auto;" >
-                    <option th:value="${SortType.CREATED_AT.getUrl()}" th:text="'최신순'" th:selected="${boardSearchParam.sort == SortType.CREATED_AT.getUrl()}"></option>
-                    <option th:value="${SortType.HIT.getUrl()}" th:text="'조회순'" th:selected="${boardSearchParam.sort == SortType.HIT.getUrl()}"></option>
+                <select form="search-form" class="form-select form-select-sm" th:field="*{boardSearchParam.sort}"
+                        style="width: auto;">
+                    <option th:value="${SortType.CREATED_AT.getUrl()}" th:text="${SortType.CREATED_AT.getTitle()}"
+                            th:selected="${boardSearchParam.sort == SortType.CREATED_AT.getUrl()}"></option>
+                    <option th:value="${SortType.HIT.getUrl()}" th:text="${SortType.HIT.getTitle()}"
+                            th:selected="${boardSearchParam.sort == SortType.HIT.getUrl()}"></option>
                 </select>
             </label>
         </div>
