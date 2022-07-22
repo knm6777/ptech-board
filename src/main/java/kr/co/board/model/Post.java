@@ -12,6 +12,7 @@ import javax.persistence.*;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -72,6 +73,15 @@ public class Post {
     public void deleteFile() {
         this.file = null;
     }
+
+//    public void deleteFileById(Long id) {
+//        for(int i=0; i<this.files.size(); i++) {
+//            if(Objects.equals(this.files.get(i).getId(), id)){
+//                this.files.remove(i);
+//                return;
+//            }
+//        }
+//    }
 
     public boolean isWriter(Member member) {
         return this.member.getId().equals(member.getId());

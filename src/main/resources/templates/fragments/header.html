@@ -19,19 +19,19 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" th:href="@{/}">Home</a>
+                    <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/' ? 'active':''}" aria-current="page" th:href="@{/}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/posts/}">자유 게시판</a>
+                    <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/posts/' ? 'active':''}" th:href="@{/posts/}">자유 게시판</a>
                 </li>
                 <li class="nav-item">
-                    <a sec:authorize="isAnonymous()" class="nav-link" th:href="@{/member/login}">로그인</a>
+                    <a sec:authorize="isAnonymous()" class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/member/login' ? 'active':''}" th:href="@{/member/login}">로그인</a>
                 </li>
                 <li class="nav-item">
-                    <a sec:authorize="isAnonymous()" class="nav-link" th:href="@{/member/new}">회원가입</a>
+                    <a sec:authorize="isAnonymous()" class="nav-link" th:classappend="${#httpServletRequest.getRequestURI() == '/member/new' ? 'active':''}" th:href="@{/member/new}">회원가입</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" sec:authorize="isAuthenticated()" sec:authentication="name" th:href="@{/member/mypage}"></a>
+                    <a class="nav-link" sec:authorize="isAuthenticated()" sec:authentication="name" th:classappend="${#httpServletRequest.getRequestURI() == '/member/mypage' ? 'active':''}" th:href="@{/member/mypage}"></a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <form th:method="post" th:action="@{/member/logout}">
