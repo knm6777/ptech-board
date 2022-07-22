@@ -65,7 +65,7 @@
                               th:action="@{/comments}" th:method="put">
                             <input type="hidden" name="id" th:value="${comm.getId()}">
                             <input type="hidden" name="postId" th:value="${post.id}">
-                            <div class="justify-content-start align-self-center" id="comment-content"
+                            <div class="justify-content-start align-self-center" th:id="comment-content +${comm.id}"
                                  th:text="${comm.content}"></div>
                         </form>
                     </div>
@@ -75,8 +75,8 @@
                             <a class="btn btn-secondary dropdown-toggle btn-sm" role="button" id="dropdownMenuLink"
                                data-bs-toggle="dropdown" aria-expanded="false"></a>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <li><a class="dropdown-item" id="editItem" role="button" aria-expanded="false"
-                                       onclick="changeComment()">수정</a></li>
+                                <li><a class="dropdown-item" id="editItem" role="button" aria-expanded="false" th:data-parameter1="${comm.id}"
+                                       onclick="changeComment(this.getAttribute('data-parameter1'))">수정</a></li>
                                 <li>
                                     <form th:id="comment-delete-form +${comm.id}" th:action="@{/comments}"
                                           th:method="delete">
@@ -107,8 +107,9 @@
 </div>
 <th:block layout:fragment="scripts">
     <script>
-        function changeComment() {
-            let changed = document.getElementById("comment-content");
+        function changeComment(id) {
+            let fullId = "comment-content"+id;
+            let changed = document.getElementById(fullId);
             changed.innerHTML = "<input type='text' class='form-control' name='content' placeholder='댓글을 입력하세요.' required></input>"
                 + "<button class='btn btn-sm btn-outline-info'>수정 완료</button>"
         }
