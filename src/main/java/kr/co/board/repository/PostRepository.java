@@ -21,7 +21,6 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Long>, 
 
     @Query(value ="SELECT p FROM Post p " +
             "LEFT JOIN FETCH p.comments c \n" +
-            "LEFT JOIN FETCH p.file f \n" +
             "WHERE  p.id = :id\n")
     Post findByIdJoin(Long id);
 

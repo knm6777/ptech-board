@@ -24,13 +24,13 @@ public class PostVo {
     private String content;
     private MultipartFile file;
 
-    private Long deleteFileId;
+    private Long[] deleteFileIds;
 
-    public Long getDeleteFileId() {
-        if (Objects.isNull(this.deleteFileId)) {
+    public Long[] getDeleteFileIds() {
+        if (Objects.isNull(this.deleteFileIds)) {
             return null;
         }
-        return this.deleteFileId;
+        return this.deleteFileIds;
     }
 
     public boolean hasFile() {

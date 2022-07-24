@@ -14,13 +14,13 @@
                  th:text="'최종 수정일: ' + ${post.updatedAt != null ? #dates.format(post.updatedAt, 'yyyy.MM.dd HH:mm:ss') : '-'}"></div>
             <hr>
             <div th:utext="${post.getContent()}"></div>
-            <div th:if="${post.getFile() != null}" th:scope="row">
+            <div th:if="${post.getFiles().size() != 0}" th:scope="row">
                 <hr>
                 <div class="row">
                     <span>첨부파일</span>
-                    <div class="row">
-                        <a th:text="${post.getFile().getOriginalName()}"
-                           th:href="@{/files/{id}(id = ${post.getFile().getId()})}"></a>
+                    <div class="row" th:each="file, iter: ${post.getFiles()}">
+                        <a th:text="${file.getOriginalName()}"
+                           th:href="@{/files/{id}(id = ${file.getId()})}"></a>
                     </div>
                 </div>
             </div>
@@ -55,6 +55,8 @@
             </form>
             <hr>
             <!--댓글 목록-->
+            <div class="small mb-2" th:if="${post.getComments().size() > 0}"
+                 th:text="${'총 댓글 | ' + post.getComments().size() + ' 개'}"></div>
             <div class="justify-content-start">
                 <div class="clickable-row d-flex bg-light border-bottom" th:id="editableComment + ${comm.id}"
                      th:scope="row" th:each="comm, iter: ${comments}">

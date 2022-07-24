@@ -70,7 +70,7 @@ public class PostController {
 
         List<Comment> comments = post.getComments();
 
-//        댓글 페이징
+//        댓글 페이징 이게 최선일까..
         final int start = (int)pageable.getOffset();
         final int end = Math.min((start + pageable.getPageSize()), comments.size());
         final Page<Comment> commentPage = new PageImpl<>(comments.subList(start, end), pageable, comments.size());
@@ -152,7 +152,7 @@ public class PostController {
 
         postForUpdate.update(vo);
         postService.save(postForUpdate);
-        fileService.updateAttachment(postForUpdate, vo.getDeleteFileId(), vo.getFile());
+        fileService.updateAttachment(postForUpdate, vo.getDeleteFileIds(), vo.getFile());
 
         return "redirect:/posts/" + postForUpdate.getId();
     }

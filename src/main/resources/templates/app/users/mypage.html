@@ -45,8 +45,8 @@
                                         <td th:text="${post.id}"></td>
                                         <td>
                                             <span th:text="${post.getComments().size() >  0  ? post.getTitle() + ' (' + post.comments.size() + ')' : post.getTitle()}"></span>
-                                            <img th:if="${post.getFile() != null}"
-                                                 th:src="@{/icons/bootstrap-icons-1.8.3/paperclip.svg}" width="15">
+<!--                                            <img th:if="${post.getFile() != null}"-->
+<!--                                                 th:src="@{/icons/bootstrap-icons-1.8.3/paperclip.svg}" width="15">-->
                                         </td>
                                         <td th:text="${#temporals.format( post.createdAt, 'yyyy-MM-dd HH:mm:ss' )}"></td>
                                         <td th:text="${post.getHit()}"></td>

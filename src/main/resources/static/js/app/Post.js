@@ -10,20 +10,12 @@ class Post {
                 this.fileDeleteBtns[i].addEventListener("click", this.removeAttachment)
             }
         }
-        if (this.fileInput) {
-            this.fileInput.addEventListener("click", (e) => {
-                if (this.fileNum !== 0) {
-                    e.preventDefault();
-                    alert("첨부 파일은 최대 1개 업로드할 수 있습니다.");
-                }
-            })
-        }
     };
     removeAttachment = (e) => {
         let attachmentFile = e.target.parentNode;
-        this.deleteFileIds.push(Number(attachmentFile.getAttribute("data-id")));
+        this.deleteFileIds.push(Number(e.target.getAttribute("data-id")));
         attachmentFile.remove();
         this.deleteFileIdsInput.value = this.deleteFileIds;
-        this.fileNum--;
+        console.log(this.deleteFileIdsInput.value)
     }
 }

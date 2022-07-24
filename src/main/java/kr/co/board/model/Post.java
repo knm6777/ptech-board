@@ -40,9 +40,12 @@ public class Post {
 
     private int hit;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "post_id")
-    private File file;
+    @OneToMany(
+            mappedBy = "post",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true
+    )
+    private final List<File> files = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Comment> comments = new ArrayList<>();
@@ -70,18 +73,18 @@ public class Post {
         this.updatedAt = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
     }
 
-    public void deleteFile() {
-        this.file = null;
-    }
-
-//    public void deleteFileById(Long id) {
-//        for(int i=0; i<this.files.size(); i++) {
-//            if(Objects.equals(this.files.get(i).getId(), id)){
-//                this.files.remove(i);
-//                return;
-//            }
-//        }
+//    public void deleteFile() {
+//        this.file = null;
 //    }
+
+    public void deleteFileById(Long id) {
+        for(int i=0; i<this.files.size(); i++) {
+            if(Objects.equals(this.files.get(i).getId(), id)){
+                this.files.remove(i);
+                return;
+            }
+        }
+    }
 
     public boolean isWriter(Member member) {
         return this.member.getId().equals(member.getId());

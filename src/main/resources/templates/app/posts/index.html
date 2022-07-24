@@ -85,7 +85,7 @@
                 <td th:text="${post.id}"></td>
                 <td>
                     <span th:text="${post.getComments().size() >  0  ? post.getTitle() + ' (' + post.comments.size() + ')' : post.getTitle()}"></span>
-                    <img th:if="${post.getFile() != null}" th:src="@{/icons/bootstrap-icons-1.8.3/paperclip.svg}"
+                    <img th:if="${post.getFiles().size() != 0}" th:src="@{/icons/bootstrap-icons-1.8.3/paperclip.svg}"
                          width="15">
                 </td>
                 <td th:text="${post.getMember().getUsername()}"></td>
