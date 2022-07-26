@@ -52,8 +52,8 @@ public class PostService {
         }
     }
 
-    public void save(Post post) throws IOException {
-        postRepository.save(post);
+    public Post save(Post post) throws IOException {
+        return postRepository.save(post);
     }
 
     @Transactional

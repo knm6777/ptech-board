@@ -172,4 +172,11 @@ public class FileService {
         }
         return files;
     }
+
+    public void setPostId(Long[] imgIds, Post post){
+        for(int i=0; i<imgIds.length; i++) {
+            File file = this.findById(imgIds[i]);
+            file.assignPost(post);
+        }
+    }
 }

@@ -116,7 +116,7 @@ public class PostController {
                 .content(postVo.getContent())
                 .member(currentMember).build();
 
-        postService.save(post);
+        post = postService.save(post);
 
         if (postVo.hasFile()) {
             for(int i=0; i<postVo.getFs().size(); i++) {
@@ -124,6 +124,9 @@ public class PostController {
                     fileService.saveAttachment(postVo.getFs().get(i), post);
                 }
             }
+        }
+        if (postVo.getSavedImgIds().length > 0) {
+            fileService.setPostId(postVo.getSavedImgIds(), post);
         }
 
         return "redirect:/posts/" + post.getId();
