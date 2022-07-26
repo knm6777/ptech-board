@@ -25,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
@@ -118,7 +119,11 @@ public class PostController {
         postService.save(post);
 
         if (postVo.hasFile()) {
-            fileService.saveAttachment(postVo.getFile(), post);
+            for(int i=0; i<postVo.getFs().size(); i++) {
+                if(!postVo.getFs().get(i).getOriginalFilename().equals("")) {
+                    fileService.saveAttachment(postVo.getFs().get(i), post);
+                }
+            }
         }
 
         return "redirect:/posts/" + post.getId();
@@ -152,7 +157,7 @@ public class PostController {
 
         postForUpdate.update(vo);
         postService.save(postForUpdate);
-        fileService.updateAttachment(postForUpdate, vo.getDeleteFileIds(), vo.getFile());
+        fileService.updateAttachment(postForUpdate, vo.getDeleteFileIds(), vo.getFs());
 
         return "redirect:/posts/" + postForUpdate.getId();
     }

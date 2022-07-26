@@ -22,9 +22,12 @@ public class PostVo {
 
     @NotBlank(message = "내용을 적으세요.")
     private String content;
-    private MultipartFile file;
+
+    private List<MultipartFile> fs;
 
     private Long[] deleteFileIds;
+
+    private Long[] savedImgIds;
 
     public Long[] getDeleteFileIds() {
         if (Objects.isNull(this.deleteFileIds)) {
@@ -34,6 +37,6 @@ public class PostVo {
     }
 
     public boolean hasFile() {
-        return !this.file.isEmpty();
+        return !(this.fs.size() == 0);
     }
 }

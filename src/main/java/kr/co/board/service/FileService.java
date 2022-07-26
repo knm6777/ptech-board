@@ -56,15 +56,22 @@ public class FileService {
 
     @Transactional
     public void saveAttachment(MultipartFile multipartFile, Post post) throws IOException {
-        File file = createFile(multipartFile);
+        if(!multipartFile.getOriginalFilename().equals("")) {
+            File file = createFile(multipartFile);
 
-        file.assignPost(post);
-        file = fileRepository.save(file);
-        uploadFile(multipartFile, file);
+            file.assignPost(post);
+            file = fileRepository.save(file);
+            uploadFile(multipartFile, file);
+        }
     }
 
     private void uploadFile(MultipartFile multipartFile, File file) throws IOException {
         Path path = Paths.get(this.uploadPath + file.getRelativePath());
+        Files.copy(multipartFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    private void uploadImage(MultipartFile multipartFile, File file) throws IOException {
+        Path path = Paths.get(this.uploadPath +  "/summernote" + file.getRelativePath());
         Files.copy(multipartFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
     }
 
@@ -114,14 +121,16 @@ public class FileService {
     }
 
     @Transactional
-    public void updateAttachment(Post post, Long[] deleteFileIds, MultipartFile multipartFile) throws IOException {
+    public void updateAttachment(Post post, Long[] deleteFileIds, List<MultipartFile> multipartFiles) throws IOException {
         if (deleteFileIds.length > 0) {
             for (Long deleteFileId : deleteFileIds) {
                 this.deleteFileById(deleteFileId);
             }
         }
-        if (!multipartFile.isEmpty()) {
-            this.saveAttachment(multipartFile, post);
+        if (multipartFiles.size() > 0) {
+            for (MultipartFile multipartFile : multipartFiles) {
+                this.saveAttachment(multipartFile, post);
+            }
         }
     }
 
@@ -140,10 +149,26 @@ public class FileService {
     public List<File> saveImages(MultipartFile[] multipartFiles) throws IOException {
         List<File> files = new ArrayList<>();
         for (MultipartFile multipartFile: multipartFiles) {
-            File file = createFile(multipartFile);
-            file = fileRepository.save(file);
-            uploadFile(multipartFile, file);
-            files.add(file);
+            if(!multipartFile.getOriginalFilename().equals("")) {
+                File file = createFile(multipartFile);
+                file = fileRepository.save(file);
+                uploadImage(multipartFile, file);
+                files.add(file);
+            }
+        }
+        return files;
+    }
+
+    @Transactional
+    public List<File> saveFiles(MultipartFile[] multipartFiles) throws IOException {
+        List<File> files = new ArrayList<>();
+        for (MultipartFile multipartFile: multipartFiles) {
+            if(!multipartFile.getOriginalFilename().equals("")) {
+                File file = createFile(multipartFile);
+                file = fileRepository.save(file);
+                uploadFile(multipartFile, file);
+                files.add(file);
+            }
         }
         return files;
     }

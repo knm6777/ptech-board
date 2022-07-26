@@ -112,8 +112,12 @@
         function changeComment(id) {
             let fullId = "comment-content"+id;
             let changed = document.getElementById(fullId);
-            changed.innerHTML = "<input type='text' class='form-control' name='content' placeholder='댓글을 입력하세요.' required></input>"
-                + "<button class='btn btn-sm btn-outline-info'>수정 완료</button>"
+            let content = changed.innerText;
+
+            changed.innerHTML = "<input id='comment-edit-input' type='text' class='form-control' name='content' required></input>"
+                + "<button class='btn btn-sm btn-outline-info'>수정 완료</button>";
+
+            document.getElementById("comment-edit-input").value= content;
         }
     </script>
 </th:block>

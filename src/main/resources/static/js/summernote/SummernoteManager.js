@@ -1,34 +1,46 @@
 class SummernoteManager {
-    init = (content) => {
-        if (content == 'null') {
-
-        }
-        $('#summernote').summernote('code', this.htmlDecode(content));
-
-        $("#summernote-form").on("submit", function () {
-            var markupStr = $('#summernote').summernote('code');
-            $("#summernote").val(markupStr);
-        });
-
-        $('.note-codable').on('blur', function() {
-            if ($('#summernote').summernote('codeview.isActivated')) {
-                $('[name="content"]').val($('#summernote').summernote('code'));
-            }
-        });
+    constructor() {
+        this.imgIds = [];
+        var self = this;
+        this.options = {
+            lineHeights: ['0.2', '0.3', '0.4', '0.5', '0.6', '0.8', '1.0', '1.2', '1.4', '1.5', '2.0', '3.0'],
+            fontNames: ['Arial', 'Comic Sans MS', 'sans-serif', 'Noto Sans CJK Kr', '나눔바른고딕', '나눔고딕', '나눔손글씨체', '한돋움체', '나눔명조', '나눔명조에코', '마루부리'],
+            fontNamesIgnoreCheck: ['Arial', 'Comic Sans MS', 'sans-serif', 'Noto Sans CJK Kr', '나눔바른고딕', '나눔고딕', '나눔손글씨체', '한돋움체', '나눔명조', '나눔명조에코', '마루부리'],
+            toolbar: [
+                ['font', ['fontname', 'fontsize', 'fontsizeunit']],
+                ['height', ['height']],
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture']],
+                ['view', ['fullscreen', 'codeview', 'help']],
+            ],
+            callbacks: {
+                onImageUpload: function (files) {
+                    self.sendImg(files, $(this));
+                }
+            },
+            lang: 'ko-KR',
+            height: 400,
+        };
+        this.summernote = $('#summernote').summernote(this.options);
     }
+
 
     sendImg = (files, editor) => {
         var token = $("meta[name='_csrf']").attr("content");
         var header = $("meta[name='_csrf_header']").attr("content");
         var data = new FormData();
-        var self = this;
-        for (var i=0; i<files.length; i++) {
+        for (var i = 0; i < files.length; i++) {
             data.append("multipartFiles", files[i]);
         }
+        var self = this;
         console.log(data);
         $.ajax({
             data: data,
-            beforeSend : function(xhr) {
+            beforeSend: function (xhr) {
                 xhr.setRequestHeader(header, token);
             },
             type: "POST",
@@ -37,21 +49,20 @@ class SummernoteManager {
             cache: false,
             contentType: false,
             processData: false,
-            success: function(data) {
-                // editor.summernote('insertImage', '/upload' + data.relativePath);
-                for (var i=0; i<data.length; i++) {
-                    editor.summernote('insertImage', '/upload' + data[i].relativePath);
+            success: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    editor.summernote('insertImage', '/upload/summernote' + data[i].relativePath);
+                    self.imgIds.push(data[i].id);
+                    console.log(self.imgIds);
                 }
+
+                var formdata = new FormData($("#post-form")[0]);
+                formdata.forEach(el=>{console.log(el)})
             },
-            error: function(jqXHR, textStatus, errorThrown) {
+            error: function (jqXHR, textStatus, errorThrown) {
                 console.log(errorThrown)
             }
         });
     }
 
-    htmlDecode = (input) => {
-        const e = document.createElement('textarea');
-        e.innerHTML = input;
-        return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
-    }
 }
