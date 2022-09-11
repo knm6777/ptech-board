@@ -30,4 +30,5 @@ public class FileController {
         List<File> images = fileService.saveImages(multipartFiles);
         return ResponseEntity.ok().body(images);
     }
+
 }

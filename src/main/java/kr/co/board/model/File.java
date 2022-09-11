@@ -1,5 +1,6 @@
 package kr.co.board.model;
 
+import kr.co.board.model.enums.SaveType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,12 +34,15 @@ public class File {
 
     private String fileType;
 
+    @CreationTimestamp
+    private Instant createdAt;
+
+    @Enumerated(EnumType.STRING)
+    private SaveType saveType;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
-
-    @CreationTimestamp
-    private Instant createdAt;
 
     @Builder
     public File(String name, String originalName, BigInteger size, String extension,
@@ -52,7 +56,12 @@ public class File {
         this.fileType = fileType;
         this.post = post;
     }
+
     public void assignPost(Post post) {
         this.post = post;
+    }
+
+    public void updateSaveType(SaveType saveType) {
+        this.saveType = saveType;
     }
 }

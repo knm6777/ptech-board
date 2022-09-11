@@ -38,22 +38,22 @@
         </li>
 
         <li th:if="${current < (totalPages - 5)}">
-            <a class="page-link" th:if="${i > 0}"
-               th:href="@{__${#httpServletRequest.servletPath}__(page=${current + 5}, size=${pagination.pageSize})} + '&' + ${pagination.query}">
+            <a class="page-link"
+               th:href="@{__${#httpServletRequest.servletPath}__(page=${current}, size=${pagination.pageSize})} + '&' + ${pagination.query}">
                 <span aria-hidden="true">&gt;</span>
             </a>
         </li>
 
         <li th:if="${(current >= (totalPages - 5)) && (current < totalPages)}">
             <a class="page-link"
-               th:href="@{__${#httpServletRequest.servletPath}__(page=${totalPages}, size=${pagination.pageSize})} + '&' + ${pagination.query}">
+               th:href="@{__${#httpServletRequest.servletPath}__(page=${totalPages -1}, size=${pagination.pageSize})} + '&' + ${pagination.query}">
                 <span aria-hidden="true">&gt;</span>
             </a>
         </li>
 
         <li th:if="${current < totalPages}">
             <a class="page-link"
-               th:href="@{__${#httpServletRequest.servletPath}__(page=${totalPages}, size=${pagination.pageSize})} + '&' + ${pagination.query}">
+               th:href="@{__${#httpServletRequest.servletPath}__(page=${totalPages -1}, size=${pagination.pageSize})} + '&' + ${pagination.query}">
                 <span aria-hidden="true">&gt;&gt;</span>
             </a>
         </li>

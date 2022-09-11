@@ -1,5 +1,7 @@
 class SummernoteManager {
     constructor() {
+        this.token = $("meta[name='_csrf']").attr("content");
+        this.header = $("meta[name='_csrf_header']").attr("content");
         this.imgIds = [];
         var self = this;
         this.options = {
@@ -20,8 +22,11 @@ class SummernoteManager {
             callbacks: {
                 onImageUpload: function (files) {
                     self.sendImg(files, $(this));
+                },
+                onMediaDelete : function(target) {
+                    self.deleteFile(target[0].src);
                 }
-            },
+        },
             lang: 'ko-KR',
             height: 400,
         };
@@ -30,8 +35,6 @@ class SummernoteManager {
 
 
     sendImg = (files, editor) => {
-        var token = $("meta[name='_csrf']").attr("content");
-        var header = $("meta[name='_csrf_header']").attr("content");
         var data = new FormData();
         for (var i = 0; i < files.length; i++) {
             data.append("multipartFiles", files[i]);
@@ -41,7 +44,7 @@ class SummernoteManager {
         $.ajax({
             data: data,
             beforeSend: function (xhr) {
-                xhr.setRequestHeader(header, token);
+                xhr.setRequestHeader(self.header, self.token);
             },
             type: "POST",
             url: '/files/summernote',
@@ -64,5 +67,24 @@ class SummernoteManager {
             }
         });
     }
+
+    deleteFile = (src) => {
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+
+        $.ajax({
+            data: {src : src},
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token);
+            },
+            type: "POST",
+            url: base_url+"dropzone/delete_file", // replace with your url
+            cache: false,
+            success: function(resp) {
+                console.log(resp);
+            }
+        });
+    }
+
 
 }

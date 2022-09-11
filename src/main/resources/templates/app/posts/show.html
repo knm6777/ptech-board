@@ -2,7 +2,8 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/base}"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-<div layout:fragment="content" class="main-content d-flex justify-content-center">
+<div layout:fragment="content" class="main-content d-flex justify-content-center"
+th:with="SaveType=${T(kr.co.board.model.enums.SaveType)}">
     <div class="w-75 justify-content-center">
         <div class="alert alert-danger" role="alert" th:text="${postError}" th:if="${postError}"></div>
         <div class="my-3 p-4 rounded-3 ">
@@ -14,16 +15,14 @@
                  th:text="'최종 수정일: ' + ${post.updatedAt != null ? #dates.format(post.updatedAt, 'yyyy.MM.dd HH:mm:ss') : '-'}"></div>
             <hr>
             <div th:utext="${post.getContent()}"></div>
-            <div th:if="${post.getFiles().size() != 0}" th:scope="row">
                 <hr>
                 <div class="row">
-                    <span>첨부파일</span>
+                    <span th:if="${post.getFiles().size() != 0}">첨부파일</span>
                     <div class="row" th:each="file, iter: ${post.getFiles()}">
-                        <a th:text="${file.getOriginalName()}"
+                        <a th:if="${file.getSaveType() == SaveType.ATTACHMENT}" th:text="${file.getOriginalName()}"
                            th:href="@{/files/{id}(id = ${file.getId()})}"></a>
                     </div>
                 </div>
-            </div>
             <hr>
             <div class="d-flex justify-content-between">
                 <a class="btn btn-secondary justify-content-start" th:href="@{'/posts'}">목록</a>
@@ -51,7 +50,6 @@
                         <input type="submit" class="btn btn-secondary" th:value="댓글저장">
                     </div>
                 </div>
-
             </form>
             <hr>
             <!--댓글 목록-->
@@ -118,6 +116,11 @@
                 + "<button class='btn btn-sm btn-outline-info'>수정 완료</button>";
 
             document.getElementById("comment-edit-input").value= content;
+        }
+
+        function showTextAttch() {
+            let
+
         }
     </script>
 </th:block>

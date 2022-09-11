@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <body lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/base}">
-<div layout:fragment="content" class="container-fluid">
+<div layout:fragment="content" class="container-fluid"
+     th:with="SaveType=${T(kr.co.board.model.enums.SaveType)}">
     <div class="w-75 container my-3 p-4 bg-white rounded-3">
         <form id="post-form" th:object="${post}" th:action="@{/posts}" th:method="${post.id == null ? 'post' : 'put'}"
               enctype="multipart/form-data">
@@ -17,7 +18,7 @@
                 <input type="file" class="form-control" id="file-input" name="fs" multiple>
             </div>
             <div class="mt-3" th:if="${post.id != null && post.getFiles() != null}">
-                <div class="file-item" th:each="file, iter: ${post.getFiles()}">
+                <div th:if="${file.getSaveType() == SaveType.ATTACHMENT}"  class="file-item" th:each="file, iter: ${post.getFiles()}">
                     <a class="primary-text" th:href="@{upload/{id}(id = ${file.getId()})}"
                        th:text="${file?.getOriginalName()}"></a>
                     <span class="file-delete-btn text-danger fw-bold" th:attrappend="data-id=${file.getId()}"
@@ -30,8 +31,8 @@
             <!-- 파일 끝 -->
             <div class="d-flex justify-content-between mt-3">
                 <a th:href="@{'/posts'}" class="btn btn-secondary">목록</a>
-                <input th:if="${post.getId() == null}" type="submit" class="btn btn-primary" id="save-btn" th:value="저장">
-                <input th:if="${post.getId() != null}" type="submit" class="btn btn-primary" th:value="수정">
+                <input th:if="${post.getId() == null}" type="submit" class="save-btn btn btn-primary" th:value="저장">
+                <input th:if="${post.getId() != null}" type="submit" class="save-btn btn btn-primary" th:value="수정">
             </div>
         </form>
     </div>
@@ -42,12 +43,19 @@
         formdata.forEach(el=>{console.log(el)})
         console.log("=====before")
 
-        saveBtn = document.getElementById("save-btn");
-        saveBtn.addEventListener("click", function (){
+        let saveBtn = $(".save-btn");
+        saveBtn.on("click", function() {
             let savedImgInput = document.getElementById("saved-img-ids-input");
             savedImgInput.value = summernote.imgIds;
             console.log("savedImgInput value: " + savedImgInput.value);
-        });
+        })
+
+        // saveBtn = document.getElementsByClassName("");
+        // saveBtn.addEventListener("click", function (){
+        //     let savedImgInput = document.getElementById("saved-img-ids-input");
+        //     savedImgInput.value = summernote.imgIds;
+        //     console.log("savedImgInput value: " + savedImgInput.value);
+        // });
 
         let post = new Post();
         let summernote = new SummernoteManager();

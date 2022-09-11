@@ -2,6 +2,7 @@ package kr.co.board.service;
 
 import kr.co.board.model.File;
 import kr.co.board.model.Post;
+import kr.co.board.model.enums.SaveType;
 import kr.co.board.repository.FileRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
@@ -68,11 +69,13 @@ public class FileService {
     private void uploadFile(MultipartFile multipartFile, File file) throws IOException {
         Path path = Paths.get(this.uploadPath + file.getRelativePath());
         Files.copy(multipartFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+        file.updateSaveType(SaveType.ATTACHMENT);
     }
 
     private void uploadImage(MultipartFile multipartFile, File file) throws IOException {
         Path path = Paths.get(this.uploadPath +  "/summernote" + file.getRelativePath());
         Files.copy(multipartFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+        file.updateSaveType(SaveType.SUMMERNOTE);
     }
 
     private File createFile(MultipartFile multipartFile) {
