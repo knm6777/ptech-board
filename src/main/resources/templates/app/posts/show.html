@@ -55,7 +55,7 @@ th:with="SaveType=${T(kr.co.board.model.enums.SaveType)}">
             <!--댓글 목록-->
             <div class="small mb-2" th:if="${post.getComments().size() > 0}"
                  th:text="${'총 댓글 | ' + post.getComments().size() + ' 개'}"></div>
-            <div class="justify-content-start">
+            <div class="justify-content-start mb-2">
                 <div class="clickable-row d-flex bg-light border-bottom" th:id="editableComment + ${comm.id}"
                      th:scope="row" th:each="comm, iter: ${comments}">
                     <div class="w-100">

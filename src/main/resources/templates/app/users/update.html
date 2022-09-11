@@ -10,28 +10,28 @@
                 <h4>회원정보 수정</h4>
             </div>
         </div>
-        <div class=" d-flex justify-content-md-center">
+        <div class="d-flex justify-content-center">
             <main class="w-50 justify-content-center">
                 <form th:object="${member}">
                     <input type="hidden" th:name="_csrf" th:value="${_csrf.token}"/>
                     <input type="hidden" th:id="userId" th:value="*{id}">
                     <div class="row mb-md-3">
-                        <label class="col-4 text-md-end" th:for="username">아이디</label>
+                        <label class="col-4 text-md-center" th:for="username">아이디</label>
                         <input type="text" th:field="*{username}" th:value="*{username}" class="col form-control"
                                th:id="username" readonly>
                     </div>
                     <div class="row mb-md-3">
-                        <label class="col-4 text-md-end" th:for="email">이메일</label>
+                        <label class="col-4 text-md-center" th:for="email">이메일</label>
                         <input type="text" th:field="*{email}" th:value="*{email}" class="col form-control"
                                th:id="email" readonly>
                     </div>
                     <div class="row mb-md-3">
-                        <label class="col-4 text-md-end" th:for="text">자기소개 변경</label>
-                        <input type="text" th:field="*{selfIntroduction}" th:value="*{selfIntroduction}"
-                               class="col form-control" th:id="selfIntroduction">
+                        <label class="col-4 text-md-center" th:for="text">자기소개 변경</label>
+                        <textarea style="height: 100px;" th:field="*{selfIntroduction}" th:value="*{selfIntroduction}"
+                                  class="col form-control" th:id="selfIntroduction"></textarea>
                     </div>
                 </form>
-                <div class="d-flex justify-content-sm-end">
+                <div class="d-flex justify-content-center mt-3">
                     <form id="member-delete-form" th:object="${member}" th:method="delete">
                         <a id="memberDelete" class="btn btn-outline-danger me-2"
                            th:onclick="memberDelete()">회원 탈퇴</a>

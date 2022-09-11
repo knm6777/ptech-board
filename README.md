@@ -1,11 +1,13 @@
-# ptech-board
+#ptech-board
+### - Spring boot를 사용한 토이프로젝트
+
 
 * Environment
     * Java 1.8
     * SprinBoot 2.5.1
     * Spring-Data-JPA
-
-
+    * Spring Security
+  
 <br>
 
 * 개발환경
