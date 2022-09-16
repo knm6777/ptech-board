@@ -148,6 +148,7 @@ public class FileService {
         String path = this.uploadPath + fileToDelete.getRelativePath();
         FileUtils.deleteQuietly(FileUtils.getFile(path));
     }
+
     @Transactional
     public List<File> saveImages(MultipartFile[] multipartFiles) throws IOException {
         List<File> files = new ArrayList<>();

@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
@@ -16,15 +17,13 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
+public class WebSecurityConfig {
 
     private final MemberService memberService;
     private final DataSource dataSource;
 
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.headers().frameOptions().sameOrigin()
                 .and()
                     .csrf()
@@ -50,7 +49,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .rememberMeParameter("remember-me")
                     .userDetailsService(memberService)
                     .tokenRepository(tokenRepository());
+
+        return http.build();
     }
+
     @Bean
     public PersistentTokenRepository tokenRepository() {
         JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
@@ -58,10 +60,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return jdbcTokenRepository;
     }
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-
+//    @Bean
+//    @Override
+//    public AuthenticationManager authenticationManagerBean() throws Exception {
+//        return super.authenticationManagerBean();
+//    }
 }

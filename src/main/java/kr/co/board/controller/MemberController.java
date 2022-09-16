@@ -39,7 +39,7 @@ public class MemberController {
     private final CommentService commentService;
     private final PostService postService;
 
-    private final AuthenticationManager authenticationManager;
+//    private final AuthenticationManager authenticationManager;
 
     @GetMapping("/login")
     public String login(HttpServletRequest request, Model model) {
